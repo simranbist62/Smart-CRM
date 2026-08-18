@@ -1,3 +1,4 @@
+import FollowsUp from "@/src/components/dashboard/FollowsUp";
 import Pipeline from "@/src/components/dashboard/Pipeline";
 import StatCard from "@/src/components/dashboard/StatCard";
 import TeamWorkload from "@/src/components/dashboard/TeamWorkload";
@@ -21,6 +22,10 @@ export default function Dashboard() {
           <div className="flex gap-4">
             <Pipeline />
             <TeamWorkload />
+          </div>
+
+          <div>
+            <FollowsUp />
           </div>
         </main>
       </div>
