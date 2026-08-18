@@ -1,5 +1,6 @@
 import Pipeline from "@/src/components/dashboard/Pipeline";
 import StatCard from "@/src/components/dashboard/StatCard";
+import TeamWorkload from "@/src/components/dashboard/TeamWorkload";
 import Sidebar from "@/src/components/layout/Sidebar";
 
 export default function Dashboard() {
@@ -17,8 +18,9 @@ export default function Dashboard() {
             <StatCard heading="Conversion" number={13.5} />
           </div>
 
-          <div>
+          <div className="flex gap-4">
             <Pipeline />
+            <TeamWorkload />
           </div>
         </main>
       </div>
