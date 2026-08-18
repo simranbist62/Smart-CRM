@@ -2,7 +2,11 @@
 
 import { usePathname } from "next/navigation";
 
-export default function Navbar() {
+type NavbarProps = {
+  onAddLead: () => void;
+};
+
+export default function Navbar({ onAddLead }: NavbarProps) {
   const pathname = usePathname();
 
   let pageName = "Dashboard";
@@ -19,37 +23,68 @@ export default function Navbar() {
     pageName = "Pipeline";
   }
 
+  if (pathname === "/calendar") {
+    pageName = "Calendar";
+  }
+
   return (
-    <div className="flex items-center justify-between border-b bg-white px-8 py-6">
+    <header className="w-full border-b border-[#e3e5df] bg-[#f8f9f6] px-4 py-5 sm:px-8">
 
-      {/* Page name */}
-      <div>
-        <p className="text-xs font-semibold tracking-widest text-green-700">
-          INTERACTIVE SALES WORKSPACE
-        </p>
+      <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
 
-        <h1 className="text-3xl font-bold text-gray-800">
-          {pageName}
-        </h1>
+        {/* LEFT SIDE */}
+
+        <div>
+          <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#527b69]">
+            Interactive Sales Workspace
+          </p>
+
+          <h1 className="text-3xl font-bold text-[#202520]">
+            {pageName}
+          </h1>
+        </div>
+
+
+        {/* RIGHT SIDE */}
+
+        <div className="flex flex-wrap items-center gap-3">
+
+          {/* Demo mode */}
+
+          <span className="rounded-full border border-[#d8c16b] bg-[#fff8dc] px-4 py-2 text-[11px] font-bold tracking-wide text-[#796522]">
+            DEMO MODE
+          </span>
+
+
+          {/* Notification */}
+
+          <button
+            type="button"
+            className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-[#e0e2dd] bg-white text-lg text-[#202520] shadow-sm"
+          >
+            🔔
+
+            <span className="absolute -right-1 -top-2 flex h-5 min-w-5 items-center justify-center rounded-full bg-[#bd6d63] px-1 text-[10px] font-bold text-white">
+              40
+            </span>
+          </button>
+
+
+          {/* Add Lead */}
+
+          <button
+            type="button"
+            onClick={onAddLead}
+            className="rounded-xl bg-[#527b69] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#456b5b]"
+          >
+            <span className="mr-2 text-lg">+</span>
+            Add lead
+          </button>
+
+        </div>
+
       </div>
 
-      {/* Right side */}
-      <div className="flex items-center gap-4">
-
-        <span className="rounded-full border border-yellow-400 bg-yellow-50 px-4 py-2 text-xs font-semibold text-yellow-700">
-          DEMO MODE
-        </span>
-
-        <button className="rounded-lg border bg-white px-4 py-3">
-          🔔
-        </button>
-
-        <button className="rounded-lg bg-green-700 px-5 py-3 font-semibold text-white">
-          + Add lead
-        </button>
-
-      </div>
-
-    </div>
+    </header>
   );
 }
