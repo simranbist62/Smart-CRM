@@ -27,7 +27,7 @@ export default function FollowUps() {
         </div>
       </div>
 
-      <div className="flex items-center justify-between mb-40">
+      <div className="flex items-center justify-between">
         <p className="mt-1 text-sm text-gray-500">Fr. J. Lewis (Admin)</p>
         <p className="mt-1 text-sm font-bold text-[#cc1225]">2020-06-25</p>
       </div>
