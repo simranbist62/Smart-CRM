@@ -3,11 +3,15 @@ import LeadSources from "@/src/components/dashboard/LeadSources";
 import Pipeline from "@/src/components/dashboard/Pipeline";
 import StatCard from "@/src/components/dashboard/StatCard";
 import TeamWorkload from "@/src/components/dashboard/TeamWorkload";
+import Navbar from "@/src/components/layout/Navbar";
 import Sidebar from "@/src/components/layout/Sidebar";
 
 export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#ebe7e6]">
+      <div className="ml-64">
+        <Navbar />
+      </div>
       <Sidebar />
 
       <main className=" ml-64 p-6">
