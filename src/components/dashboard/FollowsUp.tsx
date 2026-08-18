@@ -2,7 +2,7 @@ import { ChevronRight } from "lucide-react";
 
 export default function FollowUps() {
   return (
-    <div className="mt-6 w-full max-w-xl rounded-lg bg-white p-6 shadow-md">
+    <div className="mt-6 w-full max-w-2xl rounded-lg bg-white p-6 shadow-md">
       <div className="flex items-center justify-between">
         <span className=" font-bold text-black">Follow-ups Due</span>
 
@@ -17,6 +17,7 @@ export default function FollowUps() {
         <span className=" font-bold text-black">
           St. Xaviers School, Jwalakhel
         </span>
+
         <div className="flex items-center gap-1">
           <span className="text-sm font-medium text-gray-500">
             Ramesh Chaudhary
