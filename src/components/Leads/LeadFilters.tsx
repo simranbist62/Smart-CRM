@@ -1,5 +1,6 @@
 "use client";
 
+// Defines the values and functions received from the parent component
 type LeadFiltersProps = {
   search: string;
   setSearch: (value: string) => void;
@@ -8,6 +9,7 @@ type LeadFiltersProps = {
   totalLeads: number;
 };
 
+// Displays the search box, status filter, and total number of leads
 export default function LeadFilters({
   search,
   setSearch,
@@ -17,7 +19,8 @@ export default function LeadFilters({
 }: LeadFiltersProps) {
   return (
     <div className="flex flex-col gap-4 px-6 py-6 md:flex-row md:items-center">
-      
+
+      {/* Search leads by school, contact, or phone */}
       <input
         type="text"
         placeholder="Search school, contact or phone..."
@@ -26,6 +29,7 @@ export default function LeadFilters({
         className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-black outline-none focus:border-green-600 md:max-w-xl"
       />
 
+      {/* Filter leads by their status */}
       <select
         value={status}
         onChange={(e) => setStatus(e.target.value)}
@@ -38,6 +42,7 @@ export default function LeadFilters({
         <option value="Lost">Lost</option>
       </select>
 
+      {/* Shows the total number of leads */}
       <p className="ml-auto whitespace-nowrap text-sm text-gray-500">
         {totalLeads} leads
       </p>
