@@ -110,7 +110,7 @@ export default function AddMeetingModal({
           {/* Day and Type */}
           <div className="grid grid-cols-2 gap-3">
 
-            {/* Day input */}
+            
             <label className="text-sm font-semibold text-[#37403a]">
               Day
 
