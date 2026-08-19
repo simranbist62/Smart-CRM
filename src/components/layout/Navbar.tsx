@@ -3,10 +3,11 @@
 import { usePathname } from "next/navigation";
 
 type NavbarProps = {
-  onAddLead: () => void;
+  onAddLead?: () => void;
+  actionLabel?: string;
 };
 
-export default function Navbar({ onAddLead }: NavbarProps) {
+export default function Navbar({ onAddLead, actionLabel = "Add lead" }: NavbarProps) {
   const pathname = usePathname();
 
   let pageName = "Dashboard";
@@ -52,14 +53,16 @@ export default function Navbar({ onAddLead }: NavbarProps) {
             </span>
           </button>
 
-          <button
-            type="button"
-            onClick={onAddLead}
-            className="rounded-xl bg-[#527b69] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#456b5b]"
-          >
-            <span className="mr-2 text-lg">+</span>
-            Add lead
-          </button>
+          {onAddLead && (
+            <button
+              type="button"
+              onClick={onAddLead}
+              className="rounded-xl bg-[#527b69] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#456b5b]"
+            >
+              <span className="mr-2 text-lg">+</span>
+              {actionLabel}
+            </button>
+          )}
         </div>
       </div>
     </header>
