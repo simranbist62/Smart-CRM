@@ -1,3 +1,4 @@
+"use client";
 import FollowsUp from "@/src/components/dashboard/FollowsUp";
 import LeadSources from "@/src/components/dashboard/LeadSources";
 import Pipeline from "@/src/components/dashboard/Pipeline";
@@ -10,7 +11,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-[#ebe7e6]">
       <div className="ml-64">
-        <Navbar />
+        <Navbar onAddLead={() => {}} />
       </div>
       <Sidebar />
 

@@ -1,3 +1,6 @@
+"use client";
+
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
   LayoutDashboard,
@@ -12,6 +15,7 @@ import {
 } from "lucide-react";
 
 export default function Sidebar() {
+  const pathname = usePathname();
   return (
     <aside className="fixed left-0 top-0 h-screen w-64 bg-[#0B1F16] p-5 text-white">
       <div className="mb-6 flex items-center gap-3">
@@ -36,7 +40,12 @@ export default function Sidebar() {
           <li>
             <Link
               href="/dashboard"
-              className="flex items-center gap-3 rounded-lg bg-white/10 px-4 py-3"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/dashboard"
+                    ? "bg-white/10"
+                    : "hover:bg-white/10"
+                }`}
             >
               <LayoutDashboard size={18} />
               Dashboard
@@ -46,7 +55,10 @@ export default function Sidebar() {
           <li>
             <Link
               href="/my-work"
-              className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-white/10"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/my-work" ? "bg-white/10" : " hover:bg-white/10"
+                }`}
             >
               <Briefcase size={18} />
               My Work
@@ -56,7 +68,10 @@ export default function Sidebar() {
           <li>
             <Link
               href="/leads"
-              className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-white/10"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/leads" ? "bg-white/10" : " hover:bg-white/10"
+                }`}
             >
               <Users size={18} />
               Leads
@@ -66,7 +81,12 @@ export default function Sidebar() {
           <li>
             <Link
               href="/pipeline"
-              className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-white/10"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/pipeline"
+                    ? "bg-white/10"
+                    : " hover:bg-white/10"
+                }`}
             >
               <ListFilter size={18} />
               Pipeline
@@ -76,7 +96,12 @@ export default function Sidebar() {
           <li>
             <Link
               href="/calendar"
-              className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-white/10"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/calendar"
+                    ? "bg-white/10"
+                    : " hover:bg-white/10"
+                }`}
             >
               <CalendarDays size={18} />
               Calendar
@@ -86,7 +111,10 @@ export default function Sidebar() {
           <li>
             <Link
               href="/staff"
-              className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-white/10"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/staff" ? "bg-white/10" : " hover:bg-white/10"
+                }`}
             >
               <UserRound size={18} />
               Staff
@@ -96,7 +124,10 @@ export default function Sidebar() {
           <li>
             <Link
               href="/leaderboard"
-              className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-white/10"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/my-work" ? "bg-white/10" : " hover:bg-white/10"
+                }`}
             >
               <Trophy size={18} />
               Leaderboard
@@ -106,7 +137,12 @@ export default function Sidebar() {
           <li>
             <Link
               href="/democontrols"
-              className="flex items-center gap-3 rounded-lg px-4 py-3 hover:bg-white/10"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/democontrols"
+                    ? "bg-white/10"
+                    : " hover:bg-white/10"
+                }`}
             >
               <Settings size={18} />
               Demo controls
