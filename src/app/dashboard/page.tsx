@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import FollowsUp from "@/src/components/dashboard/FollowsUp";
 import LeadSources from "@/src/components/dashboard/LeadSources";
 import Pipeline from "@/src/components/dashboard/Pipeline";
@@ -8,38 +7,11 @@ import StatCard from "@/src/components/dashboard/StatCard";
 import TeamWorkload from "@/src/components/dashboard/TeamWorkload";
 import Navbar from "@/src/components/layout/Navbar";
 import Sidebar from "@/src/components/layout/Sidebar";
-import AddLeadModal from "@/src/components/Leads/AddLeadModal";
-
-type Lead = {
-  id: number;
-  school: string;
-  source: string;
-  contact: string;
-  phone: string;
-  status: string;
-  score: string;
-  assignedTo: string;
-  nextAction: string;
-};
 
 export default function Dashboard() {
-  const [showModal, setShowModal] = useState(false);
-  const [editingLead, setEditingLead] = useState<Lead | null>(null);
-
   const handleAddLead = () => {
-    setEditingLead(null);
-    setShowModal(true);
-  };
-
-  const handleSaveLead = (lead: Lead) => {
-    console.log("Lead saved:", lead);
-    setShowModal(false);
-    setEditingLead(null);
-  };
-
-  const handleCloseModal = () => {
-    setShowModal(false);
-    setEditingLead(null);
+    console.log("Add lead clicked");
+    // You can later open a modal here if needed
   };
 
   return (
@@ -69,14 +41,6 @@ export default function Dashboard() {
           </div>
         </main>
       </div>
-
-      {showModal && (
-        <AddLeadModal
-          lead={editingLead}
-          onClose={handleCloseModal}
-          onSave={handleSaveLead}
-        />
-      )}
     </div>
   );
 }
