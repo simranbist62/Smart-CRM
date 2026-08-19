@@ -15,7 +15,7 @@ type CalendarGridProps = {
   onMeetingClick: (meeting: Meeting) => void;
 };
 
-// Names of the days of the week
+
 const weekDays = [
   "Sun",
   "Mon",
