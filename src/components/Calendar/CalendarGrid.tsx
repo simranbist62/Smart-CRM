@@ -3,6 +3,7 @@
 // Meeting data type
 export type Meeting = {
   id: number;
+  date: string;
   day: number;
   title: string;
   type: "meeting" | "follow-up";
@@ -43,9 +44,6 @@ export default function CalendarGrid({
     currentDate.getMonth() + 1,
     0
   ).getDate();
-
-  const isSelectedMonth =
-    currentDate.getFullYear() === 2026 && currentDate.getMonth() === 7;
 
   // Create 42 calendar boxes
   // 42 boxes = 6 rows × 7 days
@@ -93,14 +91,20 @@ export default function CalendarGrid({
           {cells.map((day, index) => {
 
             // Find meetings that belong to this day
-            const dayMeetings = day && isSelectedMonth
+            const dateKey = day
+              ? `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`
+              : "";
+
+            const dayMeetings = day
               ? meetings.filter(
-                  (meeting) => meeting.day === day
+                  (meeting) => meeting.date === dateKey
                 )
               : [];
 
             const isToday =
-              isSelectedMonth && day === 18;
+              currentDate.getFullYear() === 2026 &&
+              currentDate.getMonth() === 7 &&
+              day === 18;
 
             return (
               <div
