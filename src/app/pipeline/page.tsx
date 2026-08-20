@@ -2,6 +2,7 @@
 
 import Navbar from "@/src/components/layout/Navbar";
 import Sidebar from "@/src/components/layout/Sidebar";
+import PipelineBoard from "@/src/components/pipeline/PipelineBoard";
 import PipelineSummary from "@/src/components/pipeline/PipelineSummary";
 
 export default function Pipelines() {
@@ -14,6 +15,10 @@ export default function Pipelines() {
       <main className="ml-64 p-6">
         <div>
           <PipelineSummary />
+        </div>
+
+        <div>
+          <PipelineBoard />
         </div>
       </main>
     </div>
