@@ -17,7 +17,7 @@ import CalendarGrid, {
 // Starting meetings
 // --------------------------------------------------
 
-const startingMeetings: Meeting[] = [
+const startingMeetingsWithoutDates: Omit<Meeting, "date">[] = [
   {
     id: 1,
     day: 2,
@@ -101,6 +101,11 @@ const startingMeetings: Meeting[] = [
     type: "follow-up",
   },
 ];
+
+const startingMeetings: Meeting[] = startingMeetingsWithoutDates.map((meeting) => ({
+  ...meeting,
+  date: `2026-08-${String(meeting.day).padStart(2, "0")}`,
+}));
 
 
 // --------------------------------------------------
@@ -313,6 +318,7 @@ export default function CalendarPage() {
       {showModal && (
         <AddMeetingModal
           meeting={editingMeeting}
+          initialDate={currentDate}
           onClose={() => setShowModal(false)}
           onSave={saveMeeting}
         />
