@@ -6,22 +6,20 @@ import type { Meeting } from "./CalendarGrid";
 // Props that this modal receives from the parent component
 type AddMeetingModalProps = {
   meeting: Meeting | null;        // Existing meeting when editing
+  initialDate: Date;               // Date selected by the calendar view
   onClose: () => void;             // Function to close the modal
   onSave: (meeting: Meeting) => void; // Function to save the meeting
 };
 
 export default function AddMeetingModal({
   meeting,
+  initialDate,
   onClose,
   onSave,
 }: AddMeetingModalProps) {
 
-  // Store the day entered by the user
-  // If editing, use the existing meeting day
-  // Otherwise, use 18 as the default day
-  const [day, setDay] = useState(
-    String(meeting?.day || 18)
-  );
+  const defaultDate = `${initialDate.getFullYear()}-${String(initialDate.getMonth() + 1).padStart(2, "0")}-${String(initialDate.getDate()).padStart(2, "0")}`;
+  const [date, setDate] = useState(meeting?.date || defaultDate);
 
   // Store the activity/meeting title
   const [title, setTitle] = useState(
@@ -47,8 +45,9 @@ export default function AddMeetingModal({
       // If adding, create a new ID
       id: meeting?.id || Date.now(),
 
-      // Convert the day from string to number
-      day: Number(day),
+      date,
+
+      day: Number(date.slice(-2)),
 
       // Remove unnecessary spaces from the title
       title: title.trim(),
@@ -73,7 +72,10 @@ export default function AddMeetingModal({
 
           <div>
             <p className="text-xs font-bold uppercase tracking-widest text-[#397b65]">
-              August 2026
+              {new Date(`${date}T00:00:00`).toLocaleDateString("en-US", {
+                month: "long",
+                year: "numeric",
+              })}
             </p>
 
             <h2 className="mt-1 text-xl font-bold text-[#202520]">
@@ -107,19 +109,17 @@ export default function AddMeetingModal({
             />
           </label>
 
-          {/* Day and Type */}
+          {/* Date and Type */}
           <div className="grid grid-cols-2 gap-3">
 
             
             <label className="text-sm font-semibold text-[#37403a]">
-              Day
+              Date
 
               <input
-                type="number"
-                min="1"
-                max="31"
-                value={day}
-                onChange={(event) => setDay(event.target.value)}
+                type="date"
+                value={date}
+                onChange={(event) => setDate(event.target.value)}
                 className="mt-2 w-full rounded-lg border border-[#dfe4de] p-3 text-sm outline-none focus:border-[#397b65]"
               />
             </label>
