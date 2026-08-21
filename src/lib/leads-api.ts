@@ -11,6 +11,16 @@ export type LeadStatus =
   | "NOT_INTERESTED"
   | "ON_HOLD";
 
+// Reuse this list in dropdowns so every screen sends valid backend values.
+export const leadStatuses: LeadStatus[] = [
+  "NEW_LEAD",
+  "IN_PROGRESS",
+  "LIKELY_WARM",
+  "CONVERTED",
+  "NOT_INTERESTED",
+  "ON_HOLD",
+];
+
 // Activity
 export type Activity = {
   id?: number;
@@ -44,18 +54,24 @@ export type Lead = {
 // Data needed when creating or updating a lead
 export type LeadData = Omit<Lead, "id" | "activities" | "assignedToName">;
 
+// LeadPayload is the name used by the form components.
+export type LeadPayload = LeadData;
+
 
 // ========================================
 // GET ALL LEADS
 // ========================================
 
 export async function getLeads(
-  search = "",
-  status = "",
-  page = 0,
-  size = 25
+  options: {
+    q?: string;
+    status?: LeadStatus;
+    page?: number;
+    size?: number;
+  } = {}
 ) {
-  let url = `${API_URL}/leads?q=${search}&page=${page}&size=${size}`;
+  const { q = "", status, page = 0, size = 25 } = options;
+  let url = `${API_URL}/leads?q=${encodeURIComponent(q)}&page=${page}&size=${size}`;
 
   if (status) {
     url += `&status=${status}`;
