@@ -1,6 +1,7 @@
 // API URL
-const API_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8080";
+// The browser talks to our own Next.js routes. Those routes securely forward
+// requests to the Render backend, avoiding browser CORS errors.
+const API_URL = "/api";
 
 // Lead status options
 export type LeadStatus =
@@ -80,7 +81,7 @@ export async function getLeads(
   const response = await fetch(url);
 
   if (!response.ok) {
-    throw new Error("Failed to get leads");
+    throw new Error(await getErrorMessage(response, "Failed to get leads"));
   }
 
   return response.json();
@@ -95,7 +96,7 @@ export async function getLead(id: number) {
   const response = await fetch(`${API_URL}/leads/${id}`);
 
   if (!response.ok) {
-    throw new Error("Failed to get lead");
+    throw new Error(await getErrorMessage(response, "Failed to get lead"));
   }
 
   return response.json();
@@ -116,7 +117,7 @@ export async function createLead(data: LeadData) {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to create lead");
+    throw new Error(await getErrorMessage(response, "Failed to create lead"));
   }
 
   return response.json();
@@ -137,7 +138,7 @@ export async function updateLead(id: number, data: LeadData) {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to update lead");
+    throw new Error(await getErrorMessage(response, "Failed to update lead"));
   }
 
   return response.json();
@@ -158,8 +159,18 @@ export async function addActivity(id: number, data: Activity) {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to add activity");
+    throw new Error(await getErrorMessage(response, "Failed to add activity"));
   }
 
   return response.json();
+}
+
+async function getErrorMessage(response: Response, fallback: string) {
+  const body = await response.text();
+  try {
+    const data = JSON.parse(body) as { message?: string; error?: string };
+    return data.message || data.error || fallback;
+  } catch {
+    return body || fallback;
+  }
 }
