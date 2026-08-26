@@ -1,6 +1,6 @@
 "use client";
 
-import type { Lead } from "@/src/lib/leads-api";
+import type { Lead } from "@/src/lib/leads-store";
 
 // Props for the component
 type Props = {
