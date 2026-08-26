@@ -1,161 +1,199 @@
 "use client";
 
-import { useState } from "react";
+// Import all the parts we need
+import { useEffect, useMemo, useState } from "react";
 
+// Import the layout pieces (navbar and sidebar)
 import Navbar from "../../components/layout/Navbar";
 import Sidebar from "../../components/layout/Sidebar";
+
+// Import the lead management components
 import LeadFilters from "../../components/Leads/LeadFilters";
 import LeadTable from "../../components/Leads/LeadTable";
 import AddLeadModal from "../../components/Leads/AddLeadModal";
 
-type Lead = {
-  id: number;
-  school: string;
-  source: string;
-  contact: string;
-  phone: string;
-  status: string;
-  score: string;
-  assignedTo: string;
-  nextAction: string;
-};
+// Import the functions that work with leads (save, get, update)
+import {
+  createLead,        // function to add a new lead
+  getLeads,          // function to get all leads
+  updateLead,        // function to update an existing lead
+  type Lead,         // what a Lead looks like
+  type LeadPayload,  // what data we need to create/update a lead
+  type LeadStatus,   // possible statuses (like "Active", "Closed", etc.)
+} from "@/src/lib/leads-store";
 
+
+// This is the main page that shows all leads
 export default function LeadsPage() {
+
+  // ============================================
+  // 1. STATE VARIABLES (memory for the page)
+  // ============================================
+
+  // Search and filter - what the user types in the search box
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("All");
-  const [showModal, setShowModal] = useState(false);
-  const [editingLead, setEditingLead] = useState<Lead | null>(null);
+  
+  // Status filter - show all leads or filter by status
+  const [status, setStatus] = useState<LeadStatus | "All">("All");
 
-  const [leads, setLeads] = useState<Lead[]>([
-    {
-      id: 1,
-      school: "Budhanilkantha School",
-      source: "Referral",
-      contact: "Mr. R. Sharma",
-      phone: "01-4371200",
-      status: "Converted",
-      score: "100 · Hot",
-      assignedTo: "Ramesh Chaudhary",
-      nextAction: "Plan onboarding and request a referral",
-    },
-    {
-      id: 2,
-      school: "GEMS School",
-      source: "Cold Call",
-      contact: "Ms. A. Karki",
-      phone: "01-5201818",
-      status: "Converted",
-      score: "100 · Hot",
-      assignedTo: "Ramesh Chaudhary",
-      nextAction: "Plan onboarding and request a referral",
-    },
-    {
-      id: 3,
-      school: "St. Xavier's School",
-      source: "Website Inquiry",
-      contact: "Fr. J. Lewis",
-      phone: "01-5521303",
-      status: "Likely / Warm",
-      score: "37 · Developing",
-      assignedTo: "Ramesh Chaudhary",
-      nextAction: "Complete the scheduled follow-up today",
-    },
-    {
-      id: 4,
-      school: "New Everest Academy",
-      source: "Walk-in",
-      contact: "Ramesh Chaudhary",
-      phone: "9854037128",
-      status: "Converted",
-      score: "93 · Hot",
-      assignedTo: "Raj Chaudhary",
-      nextAction: "Plan onboarding and request a referral",
-    },
-    {
-      id: 5,
-      school: "New Light English Boarding School",
-      source: "Walk-in",
-      contact: "Mr. Sujit Sah",
-      phone: "9800826477",
-      status: "Converted",
-      score: "100 · Hot",
-      assignedTo: "Ramesh Chaudhary",
-      nextAction: "Plan onboarding and request a referral",
-    },
-  ]);
+  // Lead data - the list of leads we show on the page
+  const [leads, setLeads] = useState<Lead[]>([]);
+  
+  // Has loaded? - shows "Loading..." until leads are ready
+  const [hasLoaded, setHasLoaded] = useState(false);
 
-  const filteredLeads = leads.filter((lead) => {
-    const searchText =
-      lead.school + " " + lead.contact + " " + lead.phone;
+  // Modal states - controls the popup window for adding/editing
+  const [showModal, setShowModal] = useState(false);      // Should the modal be visible?
+  const [editingLead, setEditingLead] = useState<Lead | null>(null); // Which lead are we editing? (null = adding new)
 
-    const matchesSearch = searchText
-      .toLowerCase()
-      .includes(search.toLowerCase());
 
-    const matchesStatus =
-      status === "All" || lead.status === status;
+  // ============================================
+  // 2. LOAD LEADS WHEN PAGE OPENS
+  // ============================================
 
-    return matchesSearch && matchesStatus;
-  });
+  // This runs once when the page first loads
+  useEffect(() => {
+    // Load leads from the "database" (which is stored in the browser)
+    const timer = window.setTimeout(() => {
+      setLeads(getLeads({ size: 500 }).content); // Get up to 500 leads
+      setHasLoaded(true); // We're done loading
+    }, 0);
 
-  function saveLead(lead: Lead) {
-    const existingLead = leads.find((item) => item.id === lead.id);
+    // Clean up the timer when the component unmounts
+    return () => window.clearTimeout(timer);
+  }, []); // Empty array = run only once when page loads
 
-    if (existingLead) {
-      setLeads((prevLeads) =>
-        prevLeads.map((item) =>
-          item.id === lead.id ? lead : item
-        )
-      );
-    } else {
-      setLeads((prevLeads) => [...prevLeads, lead]);
-    }
 
+  // ============================================
+  // 3. FILTER LEADS (search + status)
+  // ============================================
+
+  // This recalculates the filtered list whenever:
+  // - leads change (new data)
+  // - search changes (user types)
+  // - status changes (user filters)
+  const filteredLeads = useMemo(() => {
+    // Clean up the search term (remove spaces, make lowercase)
+    const query = search.trim().toLowerCase();
+    
+    // Go through each lead and see if it matches
+    return leads.filter((lead) => {
+      // Check if the lead matches the search query
+      const matchesQuery = !query || 
+        // Look in these fields for the search term
+        [lead.organizationName, lead.contactName, lead.phone, lead.email]
+          .filter(Boolean) // Remove any empty/null values
+          .some((value) => value!.toLowerCase().includes(query)); // Does any field contain the search term?
+      
+      // Check if the lead matches the status filter
+      const matchesStatus = status === "All" || lead.status === status;
+      
+      // Only keep this lead if it matches BOTH the search AND the status
+      return matchesQuery && matchesStatus;
+    });
+  }, [leads, search, status]); // Recalculate when these change
+
+
+  // ============================================
+  // 4. SAVE LEAD (create or update)
+  // ============================================
+
+  // This function saves a lead (either new or edited)
+  async function saveLead(data: LeadPayload) {
+    // If we're editing, update the existing lead
+    // If we're adding new, create a new lead
+    const savedLead = editingLead
+      ? updateLead(editingLead.id, data)  // UPDATE
+      : createLead(data);                  // CREATE
+
+    // Update the list of leads in state
+    setLeads((currentLeads) => {
+      if (editingLead) {
+        // If editing: replace the old lead with the updated one
+        return currentLeads.map((lead) => 
+          lead.id === savedLead.id ? savedLead : lead
+        );
+      } else {
+        // If adding: add the new lead to the end of the list
+        return [...currentLeads, savedLead];
+      }
+    });
+    
+    // Close the modal and clear the editing state
     setShowModal(false);
     setEditingLead(null);
   }
 
-  function editLead(lead: Lead) {
-    setEditingLead(lead);
-    setShowModal(true);
+
+  // ============================================
+  // 5. MODAL CONTROL FUNCTIONS
+  // ============================================
+
+  // Open modal to add a NEW lead
+  function openAddModal() {
+    setEditingLead(null); // No lead = adding new
+    setShowModal(true);   // Show the modal
   }
 
-  function addLead() {
-    setEditingLead(null);
-    setShowModal(true);
+  // Open modal to EDIT an existing lead
+  function openEditModal(lead: Lead) {
+    setEditingLead(lead); // This lead = editing
+    setShowModal(true);   // Show the modal
   }
+
+  // Close the modal (without saving)
+  function closeModal() {
+    setShowModal(false);   // Hide the modal
+    setEditingLead(null);  // Clear the editing state
+  }
+
+
+  // ============================================
+  // 6. RENDER THE PAGE
+  // ============================================
 
   return (
     <div className="min-h-screen bg-[#f7f8f5]">
+      
+      {/* SIDEBAR - the menu on the left side */}
       <Sidebar />
 
+      {/* MAIN CONTENT - the area to the right of the sidebar */}
       <div className="lg:ml-64">
-        <Navbar onAddLead={addLead} />
+        
+        {/* NAVBAR - the top bar with the "Add Lead" button */}
+        <Navbar onAddLead={openAddModal} />
 
-       
-
+        {/* FILTERS - search box and status dropdown */}
         <LeadFilters
           search={search}
           setSearch={setSearch}
           status={status}
           setStatus={setStatus}
-          totalLeads={filteredLeads.length}
+          totalLeads={filteredLeads.length} // Show how many leads match
         />
 
-        <LeadTable
-          leads={filteredLeads}
-          onEdit={editLead}
-        />
+        {/* TABLE - shows the list of leads */}
+        {!hasLoaded ? (
+          // Show loading message while data is loading
+          <p className="mx-6 text-sm text-gray-500">
+            Loading leads...
+          </p>
+        ) : (
+          // Show the table with all filtered leads
+          <LeadTable
+            leads={filteredLeads}
+            onEdit={openEditModal} // When user clicks "Edit", open the modal
+          />
+        )}
       </div>
 
+      {/* MODAL - popup window for adding/editing a lead */}
       {showModal && (
         <AddLeadModal
-          lead={editingLead}
-          onClose={() => {
-            setShowModal(false);
-            setEditingLead(null);
-          }}
-          onSave={saveLead}
+          lead={editingLead}        // If null, we're adding new
+          onClose={closeModal}      // What to do when user clicks "Cancel"
+          onSave={saveLead}         // What to do when user clicks "Save"
         />
       )}
     </div>
