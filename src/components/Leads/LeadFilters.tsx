@@ -3,7 +3,7 @@
 import {
   leadStatuses,
   type LeadStatus,
-} from "@/src/lib/leads-api";
+} from "@/src/lib/leads-store";
 
 // Props received from the parent component
 type LeadFiltersProps = {
