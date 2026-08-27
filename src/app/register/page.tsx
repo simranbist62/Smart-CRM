@@ -1,16 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import api from "../../api/api";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
+    role: "SALES",
+    designation: "Sales Executive",
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (form.password !== form.confirmPassword) {
@@ -18,13 +23,25 @@ export default function RegisterPage() {
       return;
     }
 
-    console.log("Register data:", {
-      name: form.name,
-      email: form.email,
-      password: form.password,
-    });
+    try {
+      const response = await api.post("/auth/register", {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: form.role,
+        designation: form.designation,
+      });
+      console.log("Register response:", response.data);
+      alert("Registered Successfully");
+      router.push("/login");
+    } catch (error: any) {
+      console.error(
+        "Registration failed",
+        error.response?.data || error.message,
+      );
 
-    alert("Registered Successfully");
+      alert(error.response?.data?.message || "Registration failed");
+    }
   };
 
   return (
@@ -72,6 +89,31 @@ export default function RegisterPage() {
           className="w-full rounded-lg border p-3 text-black"
           required
         />
+
+        <select
+          value={form.role}
+          onChange={(e) => setForm({ ...form, role: e.target.value })}
+          className="w-full rounded-lg border p-3 text-black"
+          required
+        >
+          <option value="">Select Role</option>
+          <option value="SALES">Sales</option>
+          <option value="MANAGER">Manager</option>
+          <option value="ADMIN">Admin</option>
+        </select>
+
+        <select
+          value={form.designation}
+          onChange={(e) => setForm({ ...form, designation: e.target.value })}
+          className="w-full rounded-lg border p-3 text-black"
+          required
+        >
+          <option value="">Select Designation</option>
+          <option value="Sales Executive">Sales Executive</option>
+          <option value="Sales Manager">Sales Manager</option>
+          <option value="Sales Representative">Sales Representative</option>
+          <option value="CRM Administrator">CRM Administrator</option>
+        </select>
 
         <button
           type="submit"
