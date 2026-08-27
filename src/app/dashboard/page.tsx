@@ -1,4 +1,5 @@
 "use client";
+
 import FollowsUp from "@/src/components/dashboard/FollowsUp";
 import LeadSources from "@/src/components/dashboard/LeadSources";
 import Pipeline from "@/src/components/dashboard/Pipeline";
@@ -8,6 +9,11 @@ import Navbar from "@/src/components/layout/Navbar";
 import Sidebar from "@/src/components/layout/Sidebar";
 
 export default function Dashboard() {
+  const handleAddLead = () => {
+    console.log("Add lead clicked");
+    
+  };
+
   return (
     <div className="min-h-screen bg-[#ebe7e6]">
       <div className="ml-64">
@@ -15,25 +21,29 @@ export default function Dashboard() {
       </div>
       <Sidebar />
 
-      <main className=" ml-64 p-6">
-        <div className="flex gap-8">
-          <StatCard heading="Total Leads" number={155} />
-          <StatCard heading="Converted" number={21} />
-          <StatCard heading="Likely/Warm" number={6} />
-          <StatCard heading="Overdue" number={1} />
-          <StatCard heading="Conversion" number={13.5} />
-        </div>
+      <div className="lg:ml-64">
+        <Navbar onAddLead={handleAddLead} />
 
-        <div className="flex gap-4">
-          <Pipeline />
-          <TeamWorkload />
-        </div>
+        <main className="p-6">
+          <div className="flex flex-wrap gap-8">
+            <StatCard heading="Total Leads" number={155} />
+            <StatCard heading="Converted" number={21} />
+            <StatCard heading="Likely/Warm" number={6} />
+            <StatCard heading="Overdue" number={1} />
+            <StatCard heading="Conversion" number={13.5} />
+          </div>
 
-        <div className="flex gap-4">
-          <FollowsUp />
-          <LeadSources />
-        </div>
-      </main>
+          <div className="mt-6 flex flex-wrap gap-4">
+            <Pipeline />
+            <TeamWorkload />
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-4">
+            <FollowsUp />
+            <LeadSources />
+          </div>
+        </main>
+      </div>
     </div>
   );
 }

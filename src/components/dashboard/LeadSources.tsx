@@ -1,20 +1,32 @@
+// Shows where the leads are coming from
 export default function LeadSources() {
   return (
-    <div className="mt-6 w-[75%] max-w-l rounded-lg bg-white p-6 shadow-md">
-      <h2 className="text-xl font-bold text-black">Lead Sources</h2>
-      <p className="mb-6 text-gray-500">Where opportunities originate</p>
+    <div className="mt-6 w-[75%] max-w-lg rounded-lg bg-white p-6 shadow-md">
 
+      {/* Section title */}
+      <h2 className="text-xl font-bold text-black">
+        Lead Sources
+      </h2>
+
+      {/* Short description */}
+      <p className="mb-6 text-gray-500">
+        Where opportunities originate
+      </p>
+
+      {/* Social Media */}
       <div className="mb-4">
         <div className="mb-1 flex justify-between font-bold text-black">
           <span>Social Media</span>
           <span>41</span>
         </div>
 
+        {/* Progress bar */}
         <div className="h-2 w-full rounded-full bg-gray-200">
           <div className="h-2 w-full rounded-full bg-[#4b707d]"></div>
         </div>
       </div>
 
+      {/* Website Inquiry */}
       <div className="mb-4">
         <div className="mb-1 flex justify-between font-bold text-black">
           <span>Website Inquiry</span>
@@ -26,6 +38,7 @@ export default function LeadSources() {
         </div>
       </div>
 
+      {/* Unspecified */}
       <div className="mb-4">
         <div className="mb-1 flex justify-between font-bold text-black">
           <span>Unspecified</span>
@@ -37,6 +50,7 @@ export default function LeadSources() {
         </div>
       </div>
 
+      {/* Cold Call */}
       <div className="mb-4">
         <div className="mb-1 flex justify-between font-bold text-black">
           <span>Cold Call</span>
@@ -48,6 +62,7 @@ export default function LeadSources() {
         </div>
       </div>
 
+      {/* Walk-in */}
       <div className="mb-4">
         <div className="mb-1 flex justify-between font-bold text-black">
           <span>Walk-in</span>
@@ -59,9 +74,10 @@ export default function LeadSources() {
         </div>
       </div>
 
+      {/* Referral */}
       <div>
         <div className="mb-1 flex justify-between font-bold text-black">
-          <span>Referal</span>
+          <span>Referral</span>
           <span>2</span>
         </div>
 
@@ -69,6 +85,7 @@ export default function LeadSources() {
           <div className="h-2 w-[10%] rounded-full bg-[#4b707d]"></div>
         </div>
       </div>
+
     </div>
   );
 }
