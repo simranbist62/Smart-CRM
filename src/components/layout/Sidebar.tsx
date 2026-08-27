@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -46,6 +47,12 @@ export default function Sidebar() {
           <li>
             <Link
               href="/dashboard"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/dashboard"
+                    ? "bg-white/10"
+                    : "hover:bg-white/10"
+                }`}
               className={linkClasses("/dashboard")}
             >
               <LayoutDashboard size={18} />
@@ -56,6 +63,10 @@ export default function Sidebar() {
           <li>
             <Link
               href="/my-work"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/my-work" ? "bg-white/10" : " hover:bg-white/10"
+                }`}
               className={linkClasses("/my-work")}
             >
               <Briefcase size={18} />
@@ -66,6 +77,10 @@ export default function Sidebar() {
           <li>
             <Link
               href="/leads"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/leads" ? "bg-white/10" : " hover:bg-white/10"
+                }`}
               className={linkClasses("/leads")}
             >
               <Users size={18} />
@@ -76,6 +91,12 @@ export default function Sidebar() {
           <li>
             <Link
               href="/pipeline"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/pipeline"
+                    ? "bg-white/10"
+                    : " hover:bg-white/10"
+                }`}
               className={linkClasses("/pipeline")}
             >
               <ListFilter size={18} />
@@ -86,6 +107,12 @@ export default function Sidebar() {
           <li>
             <Link
               href="/calendar"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/calendar"
+                    ? "bg-white/10"
+                    : " hover:bg-white/10"
+                }`}
               className={linkClasses("/calendar")}
             >
               <CalendarDays size={18} />
@@ -96,6 +123,10 @@ export default function Sidebar() {
           <li>
             <Link
               href="/staff"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/staff" ? "bg-white/10" : " hover:bg-white/10"
+                }`}
               className={linkClasses("/staff")}
             >
               <UserRound size={18} />
@@ -106,6 +137,10 @@ export default function Sidebar() {
           <li>
             <Link
               href="/leaderboard"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/my-work" ? "bg-white/10" : " hover:bg-white/10"
+                }`}
               className={linkClasses("/leaderboard")}
             >
               <Trophy size={18} />
@@ -116,6 +151,12 @@ export default function Sidebar() {
           <li>
             <Link
               href="/democontrols"
+              className={`flex items-center gap-3 rounded-lg px-4 py-3 
+                ${
+                  pathname === "/democontrols"
+                    ? "bg-white/10"
+                    : " hover:bg-white/10"
+                }`}
               className={linkClasses("/democontrols")}
             >
               <Settings size={18} />

@@ -11,11 +11,14 @@ import Sidebar from "@/src/components/layout/Sidebar";
 export default function Dashboard() {
   const handleAddLead = () => {
     console.log("Add lead clicked");
-    // You can later open a modal here if needed
+    
   };
 
   return (
     <div className="min-h-screen bg-[#ebe7e6]">
+      <div className="ml-64">
+        <Navbar onAddLead={() => {}} />
+      </div>
       <Sidebar />
 
       <div className="lg:ml-64">
