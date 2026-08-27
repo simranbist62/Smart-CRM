@@ -1,7 +1,24 @@
 "use client";
 
 import { useState } from "react";
+
 import Navbar from "../../components/layout/Navbar";
+import Sidebar from "../../components/layout/Sidebar";
+import LeadFilters from "../../components/Leads/LeadFilters";
+import LeadTable from "../../components/Leads/LeadTable";
+import AddLeadModal from "../../components/Leads/AddLeadModal";
+
+type Lead = {
+  id: number;
+  school: string;
+  source: string;
+  contact: string;
+  phone: string;
+  status: string;
+  score: string;
+  assignedTo: string;
+  nextAction: string;
+};
 
 
 // ------------------------------------
@@ -43,6 +60,9 @@ export default function LeadsPage() {
   // ------------------------------------
 
   const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("All");
+  const [showModal, setShowModal] = useState(false);
+  const [editingLead, setEditingLead] = useState<Lead | null>(null);
 
   const [statusFilter, setStatusFilter] =
     useState("All statuses");
@@ -89,6 +109,12 @@ export default function LeadsPage() {
       assigned: "Ramesh Chaudhary",
       date: "2026-06-26",
       action: "Plan onboarding and request a referral",
+      contact: "Mr. R. Sharma",
+      phone: "01-4371200",
+      status: "Converted",
+      score: "100 · Hot",
+      assignedTo: "Ramesh Chaudhary",
+      nextAction: "Plan onboarding and request a referral",
     },
 
     {
@@ -102,6 +128,12 @@ export default function LeadsPage() {
       assigned: "Ramesh Chaudhary",
       date: "2026-07-03",
       action: "Plan onboarding and request a referral",
+      contact: "Ms. A. Karki",
+      phone: "01-5201818",
+      status: "Converted",
+      score: "100 · Hot",
+      assignedTo: "Ramesh Chaudhary",
+      nextAction: "Plan onboarding and request a referral",
     },
 
     {
@@ -115,6 +147,14 @@ export default function LeadsPage() {
       assigned: "Ramesh Chaudhary",
       date: "2026-06-25",
       action: "Complete the scheduled follow-up today",
+      school: "St. Xavier's School",
+      source: "Website Inquiry",
+      contact: "Fr. J. Lewis",
+      phone: "01-5521303",
+      status: "Likely / Warm",
+      score: "37 · Developing",
+      assignedTo: "Ramesh Chaudhary",
+      nextAction: "Complete the scheduled follow-up today",
     },
 
     {
@@ -128,6 +168,8 @@ export default function LeadsPage() {
       assigned: "Raj Chaudhary",
       date: "—",
       action: "Plan onboarding and request a referral",
+      assignedTo: "Raj Chaudhary",
+      nextAction: "Plan onboarding and request a referral",
     },
 
     {
@@ -135,7 +177,7 @@ export default function LeadsPage() {
       school: "New Light English Boarding School",
       source: "Walk-in",
       contact: "Mr. Sujit Sah",
-      phone: "9800862477",
+      phone: "9800826477",
       status: "Converted",
       score: "100 · Hot",
       assigned: "Ramesh Chaudhary",
@@ -1140,6 +1182,85 @@ export default function LeadsPage() {
 
       )}
 
+      assignedTo: "Ramesh Chaudhary",
+      nextAction: "Plan onboarding and request a referral",
+    },
+  ]);
+
+  const filteredLeads = leads.filter((lead) => {
+    const searchText =
+      lead.school + " " + lead.contact + " " + lead.phone;
+
+    const matchesSearch = searchText
+      .toLowerCase()
+      .includes(search.toLowerCase());
+
+    const matchesStatus =
+      status === "All" || lead.status === status;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  function saveLead(lead: Lead) {
+    const existingLead = leads.find((item) => item.id === lead.id);
+
+    if (existingLead) {
+      setLeads((prevLeads) =>
+        prevLeads.map((item) =>
+          item.id === lead.id ? lead : item
+        )
+      );
+    } else {
+      setLeads((prevLeads) => [...prevLeads, lead]);
+    }
+
+    setShowModal(false);
+    setEditingLead(null);
+  }
+
+  function editLead(lead: Lead) {
+    setEditingLead(lead);
+    setShowModal(true);
+  }
+
+  function addLead() {
+    setEditingLead(null);
+    setShowModal(true);
+  }
+
+  return (
+    <div className="min-h-screen bg-[#f7f8f5]">
+      <Sidebar />
+
+      <div className="lg:ml-64">
+        <Navbar onAddLead={addLead} />
+
+       
+
+        <LeadFilters
+          search={search}
+          setSearch={setSearch}
+          status={status}
+          setStatus={setStatus}
+          totalLeads={filteredLeads.length}
+        />
+
+        <LeadTable
+          leads={filteredLeads}
+          onEdit={editLead}
+        />
+      </div>
+
+      {showModal && (
+        <AddLeadModal
+          lead={editingLead}
+          onClose={() => {
+            setShowModal(false);
+            setEditingLead(null);
+          }}
+          onSave={saveLead}
+        />
+      )}
     </div>
   );
 }

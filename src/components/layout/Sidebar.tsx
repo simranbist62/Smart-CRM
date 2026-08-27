@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   Briefcase,
@@ -16,8 +17,14 @@ import {
 
 export default function Sidebar() {
   const pathname = usePathname();
+
+  const linkClasses = (href: string) =>
+    `flex items-center gap-3 rounded-lg px-4 py-3 transition ${
+      pathname === href ? "bg-[#275444] text-white" : "text-white/70 hover:bg-white/10"
+    }`;
+
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-[#0B1F16] p-5 text-white">
+    <aside className="fixed left-0 top-0 z-20 hidden h-screen w-64 overflow-y-auto bg-[#0B1F16] p-5 text-white lg:block">
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#D9A441] font-bold text-[#0B1F16]">
           SM
@@ -46,6 +53,7 @@ export default function Sidebar() {
                     ? "bg-white/10"
                     : "hover:bg-white/10"
                 }`}
+              className={linkClasses("/dashboard")}
             >
               <LayoutDashboard size={18} />
               Dashboard
@@ -59,6 +67,7 @@ export default function Sidebar() {
                 ${
                   pathname === "/my-work" ? "bg-white/10" : " hover:bg-white/10"
                 }`}
+              className={linkClasses("/my-work")}
             >
               <Briefcase size={18} />
               My Work
@@ -72,6 +81,7 @@ export default function Sidebar() {
                 ${
                   pathname === "/leads" ? "bg-white/10" : " hover:bg-white/10"
                 }`}
+              className={linkClasses("/leads")}
             >
               <Users size={18} />
               Leads
@@ -87,6 +97,7 @@ export default function Sidebar() {
                     ? "bg-white/10"
                     : " hover:bg-white/10"
                 }`}
+              className={linkClasses("/pipeline")}
             >
               <ListFilter size={18} />
               Pipeline
@@ -102,6 +113,7 @@ export default function Sidebar() {
                     ? "bg-white/10"
                     : " hover:bg-white/10"
                 }`}
+              className={linkClasses("/calendar")}
             >
               <CalendarDays size={18} />
               Calendar
@@ -115,6 +127,7 @@ export default function Sidebar() {
                 ${
                   pathname === "/staff" ? "bg-white/10" : " hover:bg-white/10"
                 }`}
+              className={linkClasses("/staff")}
             >
               <UserRound size={18} />
               Staff
@@ -128,6 +141,7 @@ export default function Sidebar() {
                 ${
                   pathname === "/my-work" ? "bg-white/10" : " hover:bg-white/10"
                 }`}
+              className={linkClasses("/leaderboard")}
             >
               <Trophy size={18} />
               Leaderboard
@@ -143,6 +157,7 @@ export default function Sidebar() {
                     ? "bg-white/10"
                     : " hover:bg-white/10"
                 }`}
+              className={linkClasses("/democontrols")}
             >
               <Settings size={18} />
               Demo controls

@@ -1,13 +1,24 @@
+// Defines the data that the StatCard component receives
 type Stats = {
   heading: string;
   number: number;
 };
 
+// Displays a small card with a heading and its number
 export default function StatCard({ heading, number }: Stats) {
   return (
-    <div className="bg-white rounded-lg w-48 h-28 p-6">
-      <h3 className="text-[#adabaa] font-bold">{heading}</h3>
-      <p className="text-black font-bold text-3xl">{number}</p>
+    <div className="h-28 w-48 rounded-lg bg-white p-6">
+
+      {/* Card heading */}
+      <h3 className="font-bold text-[#adabaa]">
+        {heading}
+      </h3>
+
+      {/* Card number */}
+      <p className="text-3xl font-bold text-black">
+        {number}
+      </p>
+
     </div>
   );
 }
