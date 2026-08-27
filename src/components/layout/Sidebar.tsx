@@ -1,6 +1,5 @@
 "use client";
 
-import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -18,13 +17,59 @@ import {
 export default function Sidebar() {
   const pathname = usePathname();
 
+  const navItems = [
+    {
+      href: "/dashboard",
+      label: "Dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      href: "/my-work",
+      label: "My Work",
+      icon: Briefcase,
+    },
+    {
+      href: "/leads",
+      label: "Leads",
+      icon: Users,
+    },
+    {
+      href: "/pipeline",
+      label: "Pipeline",
+      icon: ListFilter,
+    },
+    {
+      href: "/calendar",
+      label: "Calendar",
+      icon: CalendarDays,
+    },
+    {
+      href: "/staff",
+      label: "Staff",
+      icon: UserRound,
+    },
+    {
+      href: "/leaderboard",
+      label: "Leaderboard",
+      icon: Trophy,
+    },
+    {
+      href: "/democontrols",
+      label: "Demo controls",
+      icon: Settings,
+    },
+  ];
+
   const linkClasses = (href: string) =>
     `flex items-center gap-3 rounded-lg px-4 py-3 transition ${
-      pathname === href ? "bg-[#275444] text-white" : "text-white/70 hover:bg-white/10"
+      pathname === href
+        ? "bg-[#275444] text-white"
+        : "text-white/70 hover:bg-white/10"
     }`;
 
   return (
     <aside className="fixed left-0 top-0 z-20 hidden h-screen w-64 overflow-y-auto bg-[#0B1F16] p-5 text-white lg:block">
+      {/* Logo / Brand */}
       <div className="mb-6 flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-[#D9A441] font-bold text-[#0B1F16]">
           SM
@@ -36,142 +81,38 @@ export default function Sidebar() {
         </div>
       </div>
 
+      {/* Demo Badge */}
       <div className="mb-6 rounded-lg bg-[#D9A441] px-2 py-2">
         <p className="text-center text-xs font-semibold text-[#0B1F16]">
           POC · LOCAL DATA
         </p>
       </div>
 
+      {/* Navigation */}
       <nav>
         <ul className="space-y-2">
-          <li>
-            <Link
-              href="/dashboard"
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 
-                ${
-                  pathname === "/dashboard"
-                    ? "bg-white/10"
-                    : "hover:bg-white/10"
-                }`}
-              className={linkClasses("/dashboard")}
-            >
-              <LayoutDashboard size={18} />
-              Dashboard
-            </Link>
-          </li>
+          {navItems.map((item) => {
+            const Icon = item.icon;
 
-          <li>
-            <Link
-              href="/my-work"
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 
-                ${
-                  pathname === "/my-work" ? "bg-white/10" : " hover:bg-white/10"
-                }`}
-              className={linkClasses("/my-work")}
-            >
-              <Briefcase size={18} />
-              My Work
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/leads"
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 
-                ${
-                  pathname === "/leads" ? "bg-white/10" : " hover:bg-white/10"
-                }`}
-              className={linkClasses("/leads")}
-            >
-              <Users size={18} />
-              Leads
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/pipeline"
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 
-                ${
-                  pathname === "/pipeline"
-                    ? "bg-white/10"
-                    : " hover:bg-white/10"
-                }`}
-              className={linkClasses("/pipeline")}
-            >
-              <ListFilter size={18} />
-              Pipeline
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/calendar"
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 
-                ${
-                  pathname === "/calendar"
-                    ? "bg-white/10"
-                    : " hover:bg-white/10"
-                }`}
-              className={linkClasses("/calendar")}
-            >
-              <CalendarDays size={18} />
-              Calendar
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/staff"
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 
-                ${
-                  pathname === "/staff" ? "bg-white/10" : " hover:bg-white/10"
-                }`}
-              className={linkClasses("/staff")}
-            >
-              <UserRound size={18} />
-              Staff
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/leaderboard"
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 
-                ${
-                  pathname === "/my-work" ? "bg-white/10" : " hover:bg-white/10"
-                }`}
-              className={linkClasses("/leaderboard")}
-            >
-              <Trophy size={18} />
-              Leaderboard
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              href="/democontrols"
-              className={`flex items-center gap-3 rounded-lg px-4 py-3 
-                ${
-                  pathname === "/democontrols"
-                    ? "bg-white/10"
-                    : " hover:bg-white/10"
-                }`}
-              className={linkClasses("/democontrols")}
-            >
-              <Settings size={18} />
-              Demo controls
-            </Link>
-          </li>
+            return (
+              <li key={item.href}>
+                <Link href={item.href} className={linkClasses(item.href)}>
+                  <Icon size={18} />
+                  {item.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </nav>
 
       <hr className="mt-6 border-white/30" />
 
+      {/* User Section */}
       <div className="mt-6">
         <p className="mb-2 text-xs text-white/50">VIEWING AS</p>
 
-        <select className="w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none mb-4">
+        <select className="mb-4 w-full rounded-lg bg-white/10 px-3 py-2 text-sm text-white outline-none">
           <option className="text-black">CRM Administrator - Admin</option>
           <option className="text-black">User</option>
         </select>
@@ -188,9 +129,10 @@ export default function Sidebar() {
         </div>
       </div>
 
+      {/* Exit Demo */}
       <Link
         href="/"
-        className="mt-8 flex items-center gap-3 rounded-lg px-3 py-3 hover:bg-white/10"
+        className="mt-8 flex items-center gap-3 rounded-lg px-3 py-3 text-white/70 transition hover:bg-white/10 hover:text-white"
       >
         <SquareArrowRightExit size={18} />
         Exit Demo
