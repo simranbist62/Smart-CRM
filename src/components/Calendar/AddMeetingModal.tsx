@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import type { Lead } from "@/src/lib/leads-store";
+import type { Lead } from "@/src/lib/leads-api";
 
 // These are the different types of activities we can add
 // We have 4 options: CALL, MEETING, EMAIL, and FOLLOW_UP
@@ -20,7 +20,7 @@ type Props = {
     leadId: number,
     type: ActivityType,
     remarks: string,
-    date: string
+    date: string,
   ) => Promise<void>;
 };
 
@@ -39,16 +39,16 @@ export default function AddMeetingModal({
 
   // STEP 2: Set up state variables to track form data
   // These are like "memory" for the form as the user types
-  
+
   // Which lead is selected? (starts empty)
   const [leadId, setLeadId] = useState("");
-  
+
   // What date is selected? (starts with today)
   const [date, setDate] = useState(defaultDate);
-  
+
   // What type of activity? (starts with MEETING)
   const [activityType, setActivityType] = useState<ActivityType>("MEETING");
-  
+
   // What are the details/remarks? (starts empty)
   const [remarks, setRemarks] = useState("");
 
@@ -80,7 +80,7 @@ export default function AddMeetingModal({
         Number(leadId), // Convert leadId to a number
         activityType,
         remarks.trim(),
-        date
+        date,
       );
       // If successful, the parent component will close the modal
     } catch (error) {
@@ -98,10 +98,8 @@ export default function AddMeetingModal({
   return (
     // This creates a dark overlay that covers the entire screen
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-      
       {/* This is the white modal box that appears on top */}
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl">
-        
         {/* HEADER: Title and close button */}
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-bold text-gray-800">Add Activity</h2>
@@ -112,7 +110,6 @@ export default function AddMeetingModal({
 
         {/* FORM: All the input fields */}
         <div className="space-y-4">
-          
           {/* LEAD dropdown: Choose which lead this activity is for */}
           <div>
             <label className="text-sm font-semibold text-gray-700">Lead</label>
@@ -137,9 +134,7 @@ export default function AddMeetingModal({
             </label>
             <select
               value={activityType}
-              onChange={(e) =>
-                setActivityType(e.target.value as ActivityType)
-              }
+              onChange={(e) => setActivityType(e.target.value as ActivityType)}
               className="mt-2 w-full rounded-lg border p-3"
             >
               <option value="MEETING">Meeting</option>

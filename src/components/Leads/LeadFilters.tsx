@@ -1,9 +1,15 @@
 "use client";
 
-import {
-  leadStatuses,
-  type LeadStatus,
-} from "@/src/lib/leads-store";
+import type { LeadStatus } from "@/src/lib/leads-api";
+
+const leadStatuses: LeadStatus[] = [
+  "NEW_LEAD",
+  "IN_PROGRESS",
+  "LIKELY_WARM",
+  "CONVERTED",
+  "NOT_INTERESTED",
+  "ON_HOLD",
+];
 
 // Props received from the parent component
 type LeadFiltersProps = {
@@ -23,7 +29,6 @@ export default function LeadFilters({
 }: LeadFiltersProps) {
   return (
     <div className="flex flex-col gap-4 px-6 py-6 md:flex-row md:items-center">
-
       {/* Search box */}
       <input
         type="text"
@@ -36,9 +41,7 @@ export default function LeadFilters({
       {/* Status filter */}
       <select
         value={status}
-        onChange={(e) =>
-          setStatus(e.target.value as LeadStatus | "All")
-        }
+        onChange={(e) => setStatus(e.target.value as LeadStatus | "All")}
         className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-black outline-none focus:border-green-600"
       >
         <option value="All">All statuses</option>
@@ -54,7 +57,6 @@ export default function LeadFilters({
       <p className="ml-auto whitespace-nowrap text-sm text-gray-500">
         {totalLeads} leads
       </p>
-
     </div>
   );
 }

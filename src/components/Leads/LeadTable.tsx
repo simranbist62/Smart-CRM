@@ -1,6 +1,6 @@
 "use client";
 
-import type { Lead } from "@/src/lib/leads-store";
+import type { Lead } from "@/src/lib/leads-api";
 
 // Props for the component
 type Props = {
@@ -12,7 +12,6 @@ export default function LeadTable({ leads, onEdit }: Props) {
   return (
     <div className="mx-6 overflow-x-auto rounded-xl border border-gray-200 bg-white">
       <table className="w-full min-w-[850px]">
-
         {/* Table Header */}
         <thead className="bg-gray-100">
           <tr className="text-left text-xs uppercase tracking-wide text-gray-600">
@@ -35,9 +34,7 @@ export default function LeadTable({ leads, onEdit }: Props) {
             >
               {/* School / Lead */}
               <td className="px-4 py-4">
-                <p className="font-semibold">
-                  {lead.organizationName}
-                </p>
+                <p className="font-semibold">{lead.organizationName}</p>
 
                 <p className="text-xs text-gray-500">
                   {lead.source || "No source"}
@@ -48,9 +45,7 @@ export default function LeadTable({ leads, onEdit }: Props) {
               <td className="px-4 py-4">
                 <p>{lead.contactName}</p>
 
-                <p className="text-xs text-gray-500">
-                  {lead.phone}
-                </p>
+                <p className="text-xs text-gray-500">{lead.phone}</p>
               </td>
 
               {/* Status */}
@@ -61,15 +56,11 @@ export default function LeadTable({ leads, onEdit }: Props) {
               </td>
 
               {/* Priority */}
-              <td className="px-4 py-4">
-                {lead.priority || "—"}
-              </td>
+              <td className="px-4 py-4">{lead.priority || "—"}</td>
 
               {/* Assigned To */}
               <td className="px-4 py-4">
-                {lead.assignedToName ||
-                  lead.assignedToId ||
-                  "Unassigned"}
+                {lead.assignedToName || lead.assignedToId || "Unassigned"}
               </td>
 
               {/* Next Action */}
@@ -92,10 +83,7 @@ export default function LeadTable({ leads, onEdit }: Props) {
           {/* No Leads */}
           {leads.length === 0 && (
             <tr>
-              <td
-                colSpan={7}
-                className="px-4 py-8 text-center text-gray-500"
-              >
+              <td colSpan={7} className="px-4 py-8 text-center text-gray-500">
                 No leads found.
               </td>
             </tr>

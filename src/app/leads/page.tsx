@@ -33,12 +33,18 @@ export default function LeadsPage() {
 
   // Load leads when page opens
   useEffect(() => {
-    const timer = window.setTimeout(() => {
-      setLeads(getLeads({ size: 500 }).content);
-      setHasLoaded(true);
-    }, 0);
+    async function loadLeads() {
+      try {
+        const response = await getLeads({ size: 500 });
+        setLeads(response.content ?? []);
+      } catch (error) {
+        console.error("Failed to load leads:", error);
+      } finally {
+        setHasLoaded(true);
+      }
+    }
 
-    return () => window.clearTimeout(timer);
+    loadLeads();
   }, []);
 
   // Filter leads
@@ -62,8 +68,8 @@ export default function LeadsPage() {
   async function saveLead(data: LeadPayload) {
     try {
       const savedLead = editingLead
-        ? updateLead(editingLead.id, data)
-        : createLead(data);
+        ? await updateLead(editingLead.id, data)
+        : await createLead(data);
 
       setLeads((currentLeads) => {
         if (editingLead) {
