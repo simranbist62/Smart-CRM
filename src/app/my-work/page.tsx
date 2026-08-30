@@ -10,10 +10,10 @@ import MonthlyProgress from "../../components/my-work/MonthlyProgress";
 export default function MyWork() {
   return (
     <div className="min-h-screen bg-[#f7f8f6]">
-      <Sidebar />
       <div className="ml-64">
         <Navbar onAddLead={() => {}} />
       </div>
+      <Sidebar />
 
       <main className="ml-[250px]">
         <div className="space-y-4 p-6">

@@ -1,15 +1,25 @@
 "use client";
 
-// Defines the values and functions received from the parent component
+import type { LeadStatus } from "@/src/lib/leads-api";
+
+const leadStatuses: LeadStatus[] = [
+  "NEW_LEAD",
+  "IN_PROGRESS",
+  "LIKELY_WARM",
+  "CONVERTED",
+  "NOT_INTERESTED",
+  "ON_HOLD",
+];
+
+// Props received from the parent component
 type LeadFiltersProps = {
   search: string;
   setSearch: (value: string) => void;
-  status: string;
-  setStatus: (value: string) => void;
+  status: LeadStatus | "All";
+  setStatus: (value: LeadStatus | "All") => void;
   totalLeads: number;
 };
 
-// Displays the search box, status filter, and total number of leads
 export default function LeadFilters({
   search,
   setSearch,
@@ -19,8 +29,7 @@ export default function LeadFilters({
 }: LeadFiltersProps) {
   return (
     <div className="flex flex-col gap-4 px-6 py-6 md:flex-row md:items-center">
-
-      {/* Search leads by school, contact, or phone */}
+      {/* Search box */}
       <input
         type="text"
         placeholder="Search school, contact or phone..."
@@ -29,24 +38,25 @@ export default function LeadFilters({
         className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-black outline-none focus:border-green-600 md:max-w-xl"
       />
 
-      {/* Filter leads by their status */}
+      {/* Status filter */}
       <select
         value={status}
-        onChange={(e) => setStatus(e.target.value)}
+        onChange={(e) => setStatus(e.target.value as LeadStatus | "All")}
         className="rounded-lg border border-gray-200 bg-white px-4 py-3 text-black outline-none focus:border-green-600"
       >
         <option value="All">All statuses</option>
-        <option value="New">New</option>
-        <option value="Converted">Converted</option>
-        <option value="Likely / Warm">Likely / Warm</option>
-        <option value="Lost">Lost</option>
+
+        {leadStatuses.map((statusName) => (
+          <option key={statusName} value={statusName}>
+            {statusName.replaceAll("_", " ")}
+          </option>
+        ))}
       </select>
 
-      {/* Shows the total number of leads */}
+      {/* Total leads */}
       <p className="ml-auto whitespace-nowrap text-sm text-gray-500">
         {totalLeads} leads
       </p>
-
     </div>
   );
 }

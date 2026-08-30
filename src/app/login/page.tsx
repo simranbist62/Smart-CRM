@@ -2,42 +2,49 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import api from "@/src/api/api";
 import axios from "axios";
 
 export default function LoginPage() {
+  const router = useRouter();
+
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     setError("");
+    setLoading(true);
 
     try {
-      const response = await axios.post(
-        "https://crm-backend-eh94.onrender.com/auth/login",
-        {
-          email: form.email,
-          password: form.password,
-        },
-        {
-          withCredentials: true,
-        },
-      );
+      const response = await api.post("/auth/login", {
+        email: form.email,
+        password: form.password,
+      });
 
-      console.log(response.data);
+      console.log("Login response:", response.data);
+
       alert("Login successful");
+
+      // Redirect to dashboard
+      router.push("/dashboard");
     } catch (error) {
-      console.error(error);
+      console.error("Login failed:", error);
 
       if (axios.isAxiosError(error)) {
         setError(error.response?.data?.message || "Invalid email or password");
       } else {
         setError("Something went wrong");
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -85,9 +92,10 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          className="w-full rounded-lg bg-[#0B1F16] py-3 font-semibold text-white"
+          disabled={loading}
+          className="w-full rounded-lg bg-[#0B1F16] py-3 font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         <p className="text-sm text-gray-500">

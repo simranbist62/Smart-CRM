@@ -1,150 +1,277 @@
 "use client";
 
 import { useState } from "react";
+import {
+  leadStatuses,
+  type Lead,
+  type LeadPayload,
+  type LeadStatus,
+} from "@/src/lib/leads-api";
 
-// Defines the information stored for each lead
-type Lead = {
-  id: number;
-  school: string;
-  source: string;
-  contact: string;
-  phone: string;
-  status: string;
-  score: string;
-  assignedTo: string;
-  nextAction: string;
-};
-
-// Defines the props that the modal receives
-type AddLeadModalProps = {
+// Props received from the parent
+type Props = {
   lead: Lead | null;
   onClose: () => void;
-  onSave: (lead: Lead) => void;
+  onSave: (data: LeadPayload) => Promise<void>;
 };
 
-// Modal used to add a new lead or edit an existing lead
+// Empty form for creating a new lead
+const emptyLead: LeadPayload = {
+  organizationName: "",
+  contactName: "",
+  phone: "",
+  status: "NEW_LEAD",
+  priority: "MEDIUM",
+};
+
 export default function AddLeadModal({
   lead,
   onClose,
   onSave,
-}: AddLeadModalProps) {
+}: Props) {
 
-  // Stores the values entered in the form
-  const [school, setSchool] = useState(lead?.school || "");
-  const [contact, setContact] = useState(lead?.contact || "");
-  const [phone, setPhone] = useState(lead?.phone || "");
-  const [status, setStatus] = useState(lead?.status || "New");
-  const [score, setScore] = useState(
-    lead?.score || "50 · Developing"
+  // Form data
+  const [form, setForm] = useState<LeadPayload>(
+    lead
+      ? {
+          organizationName: lead.organizationName,
+          contactName: lead.contactName,
+          designation: lead.designation,
+          phone: lead.phone,
+          email: lead.email,
+          province: lead.province,
+          district: lead.district,
+          source: lead.source,
+          leadType: lead.leadType,
+          priority: lead.priority,
+          status: lead.status,
+          nextActionDate: lead.nextActionDate,
+          notes: lead.notes,
+          assignedToId: lead.assignedToId,
+        }
+      : emptyLead
   );
-  const [assignedTo, setAssignedTo] = useState(
-    lead?.assignedTo || "Unassigned"
-  );
 
-  // Creates the lead object and sends it back to the parent component
-  function handleSubmit() {
-    const newLead: Lead = {
-      id: lead?.id || Date.now(),
-      school,
-      source: lead?.source || "Walk-in",
-      contact,
-      phone,
-      status,
-      score,
-      assignedTo,
-      nextAction: "Follow up with lead",
-    };
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
-    onSave(newLead);
+  // Update a form field
+  function setField(
+    field: keyof LeadPayload,
+    value: LeadPayload[keyof LeadPayload]
+  ) {
+    setForm({
+      ...form,
+      [field]: value,
+    });
+  }
+
+  // Save the lead
+  async function submit() {
+    // Check required fields
+    if (
+      !form.organizationName.trim() ||
+      !form.contactName.trim() ||
+      !form.phone.trim()
+    ) {
+      setError("School, contact name, and phone are required.");
+      return;
+    }
+
+    setSaving(true);
+    setError("");
+
+    try {
+      await onSave(form);
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
+      } else {
+        setError("Could not save the lead.");
+      }
+
+      setSaving(false);
+    }
   }
 
   return (
-    // Dark background behind the modal
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/50 p-4">
+      <div className="w-full max-w-2xl rounded-xl bg-white p-6 shadow-xl">
 
-      {/* Modal box */}
-      <div className="w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
-
-        {/* Modal header */}
+        {/* Header */}
         <div className="mb-5 flex items-center justify-between">
           <h2 className="text-xl font-bold text-black">
             {lead ? "Edit Lead" : "Add Lead"}
           </h2>
 
-          {/* Close button */}
           <button
             onClick={onClose}
-            className="text-xl text-gray-500 hover:text-black"
+            className="text-2xl text-gray-500"
           >
-            ×
+            &times;
           </button>
         </div>
 
-        {/* Form fields */}
-        <div className="space-y-4">
+        {/* Form */}
+        <div className="grid gap-4 md:grid-cols-2">
 
-          {/* School name */}
-          <input
-            value={school}
-            onChange={(e) => setSchool(e.target.value)}
-            placeholder="School name"
-            className="w-full rounded-lg border p-3 text-black"
+          <Field
+            label="School / Organization *"
+            value={form.organizationName}
+            onChange={(value) =>
+              setField("organizationName", value)
+            }
           />
 
-          {/* Contact name */}
-          <input
-            value={contact}
-            onChange={(e) => setContact(e.target.value)}
-            placeholder="Contact name"
-            className="w-full rounded-lg border p-3 text-black"
+          <Field
+            label="Contact Name *"
+            value={form.contactName}
+            onChange={(value) =>
+              setField("contactName", value)
+            }
           />
 
-          {/* Phone number */}
-          <input
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Phone number"
-            className="w-full rounded-lg border p-3 text-black"
+          <Field
+            label="Designation"
+            value={form.designation ?? ""}
+            onChange={(value) =>
+              setField("designation", value)
+            }
           />
 
-          {/* Lead status */}
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            className="w-full rounded-lg border p-3 text-black"
-          >
-            <option>New</option>
-            <option>Converted</option>
-            <option>Likely / Warm</option>
-            <option>Lost</option>
-          </select>
-
-          {/* Lead score */}
-          <select
-            value={score}
-            onChange={(e) => setScore(e.target.value)}
-            className="w-full rounded-lg border p-3 text-black"
-          >
-            <option>100 · Hot</option>
-            <option>75 · Warm</option>
-            <option>50 · Developing</option>
-            <option>25 · Cold</option>
-          </select>
-
-          {/* Person assigned to the lead */}
-          <input
-            value={assignedTo}
-            onChange={(e) => setAssignedTo(e.target.value)}
-            placeholder="Assigned to"
-            className="w-full rounded-lg border p-3 text-black"
+          <Field
+            label="Phone *"
+            value={form.phone}
+            onChange={(value) =>
+              setField("phone", value)
+            }
           />
 
+          <Field
+            label="Email"
+            type="email"
+            value={form.email ?? ""}
+            onChange={(value) =>
+              setField("email", value)
+            }
+          />
+
+          <Field
+            label="Source"
+            value={form.source ?? ""}
+            onChange={(value) =>
+              setField("source", value)
+            }
+          />
+
+          <Field
+            label="Province"
+            value={form.province ?? ""}
+            onChange={(value) =>
+              setField("province", value)
+            }
+          />
+
+          <Field
+            label="District"
+            value={form.district ?? ""}
+            onChange={(value) =>
+              setField("district", value)
+            }
+          />
+
+          <Field
+            label="Lead Type"
+            value={form.leadType ?? ""}
+            onChange={(value) =>
+              setField("leadType", value)
+            }
+          />
+
+          <Field
+            label="Next Action Date"
+            type="date"
+            value={form.nextActionDate ?? ""}
+            onChange={(value) =>
+              setField("nextActionDate", value)
+            }
+          />
+
+          {/* Status */}
+          <label className="text-sm font-medium text-gray-700">
+            Status
+
+            <select
+              value={form.status}
+              onChange={(e) =>
+                setField("status", e.target.value as LeadStatus)
+              }
+              className="mt-1 w-full rounded-lg border p-3 text-black"
+            >
+              {leadStatuses.map((status) => (
+                <option key={status} value={status}>
+                  {status}
+                </option>
+              ))}
+            </select>
+          </label>
+
+          {/* Priority */}
+          <label className="text-sm font-medium text-gray-700">
+            Priority
+
+            <select
+              value={form.priority}
+              onChange={(e) =>
+                setField(
+                  "priority",
+                  e.target.value as LeadPayload["priority"]
+                )
+              }
+              className="mt-1 w-full rounded-lg border p-3 text-black"
+            >
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM">MEDIUM</option>
+              <option value="HIGH">HIGH</option>
+            </select>
+          </label>
+
+          {/* Assigned User */}
+          <Field
+            label="Assigned User ID"
+            type="number"
+            value={form.assignedToId?.toString() ?? ""}
+            onChange={(value) =>
+              setField(
+                "assignedToId",
+                value ? Number(value) : undefined
+              )
+            }
+          />
+
+          {/* Notes */}
+          <label className="text-sm font-medium text-gray-700 md:col-span-2">
+            Notes
+
+            <textarea
+              value={form.notes ?? ""}
+              onChange={(e) =>
+                setField("notes", e.target.value)
+              }
+              className="mt-1 min-h-24 w-full rounded-lg border p-3 text-black"
+            />
+          </label>
         </div>
 
-        {/* Modal buttons */}
-        <div className="mt-6 flex justify-end gap-3">
+        {/* Error message */}
+        {error && (
+          <p className="mt-4 text-sm text-red-600">
+            {error}
+          </p>
+        )}
 
-          {/* Cancel button */}
+        {/* Buttons */}
+        <div className="mt-6 flex justify-end gap-3">
           <button
             onClick={onClose}
             className="rounded-lg border px-4 py-2 text-black"
@@ -152,17 +279,46 @@ export default function AddLeadModal({
             Cancel
           </button>
 
-          {/* Save or Add button */}
           <button
-            onClick={handleSubmit}
-            className="rounded-lg bg-green-700 px-5 py-2 text-white hover:bg-green-800"
+            disabled={saving}
+            onClick={submit}
+            className="rounded-lg bg-green-700 px-5 py-2 text-white disabled:opacity-60"
           >
-            {lead ? "Save Changes" : "Add Lead"}
+            {saving
+              ? "Saving..."
+              : lead
+              ? "Save Changes"
+              : "Add Lead"}
           </button>
-
         </div>
-
       </div>
     </div>
+  );
+}
+
+
+// Reusable input field
+function Field({
+  label,
+  value,
+  onChange,
+  type = "text",
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  type?: string;
+}) {
+  return (
+    <label className="text-sm font-medium text-gray-700">
+      {label}
+
+      <input
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="mt-1 w-full rounded-lg border p-3 text-black"
+      />
+    </label>
   );
 }
