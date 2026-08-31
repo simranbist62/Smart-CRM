@@ -9,9 +9,11 @@ import CalendarGrid, {
   type Meeting,
 } from "../../components/Calendar/CalendarGrid";
 
-import { addActivity, getLeads, type Lead } from "@/src/lib/leads-api";
+import { addActivity, getLeads, Lead } from "@/src/lib/leads-store";
+
 
 export default function CalendarPage() {
+
   // Current month shown on the calendar
   const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -24,22 +26,20 @@ export default function CalendarPage() {
   // Stores error messages
   const [error, setError] = useState("");
 
+
   // Load leads when the page opens
   useEffect(() => {
-    async function loadLeads() {
-      try {
-        const response = await getLeads({ size: 500 });
-        setLeads(response.content ?? []);
-      } catch (error) {
-        console.error("Failed to load leads:", error);
-      }
-    }
+    const timer = window.setTimeout(() => {
+      setLeads(getLeads({ size: 500 }).content);
+    }, 0);
 
-    loadLeads();
+    return () => window.clearTimeout(timer);
   }, []);
+
 
   // Convert leads into calendar meetings
   const meetings = useMemo<Meeting[]>(() => {
+
     return leads
       .filter((lead) => lead.nextActionDate)
       .map((lead) => ({
@@ -49,17 +49,20 @@ export default function CalendarPage() {
         title: lead.organizationName,
         type: "follow-up" as const,
       }));
+
   }, [leads]);
+
 
   // Save a new activity
   async function saveActivity(
     leadId: number,
     type: "CALL" | "MEETING" | "EMAIL" | "FOLLOW_UP",
     remarks: string,
-    date: string,
+    date: string
   ) {
     try {
-      const updatedLead = await addActivity(leadId, {
+
+      const updatedLead = addActivity(leadId, {
         type: type,
         remarks: remarks,
         occurredAt: new Date().toISOString().slice(0, 10),
@@ -68,19 +71,25 @@ export default function CalendarPage() {
 
       // Update the lead in the list
       setLeads((currentLeads) =>
-        currentLeads.map((lead) => (lead.id === leadId ? updatedLead : lead)),
+        currentLeads.map((lead) =>
+          lead.id === leadId ? updatedLead : lead
+        )
       );
 
       // Close the modal
       setShowModal(false);
+
     } catch (error) {
+
       if (error instanceof Error) {
         setError(error.message);
       } else {
         setError("Could not save activity.");
       }
+
     }
   }
+
 
   // Display current month and year
   const monthName = currentDate.toLocaleDateString("en-US", {
@@ -88,31 +97,45 @@ export default function CalendarPage() {
     year: "numeric",
   });
 
+
   // Go to previous month
   function goToPreviousMonth() {
     setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1),
+      new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() - 1,
+        1
+      )
     );
   }
+
 
   // Go to next month
   function goToNextMonth() {
     setCurrentDate(
-      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1),
+      new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + 1,
+        1
+      )
     );
   }
+
 
   // Go to today's month
   function goToToday() {
     setCurrentDate(new Date());
   }
 
+
   return (
     <div className="min-h-screen bg-[#f7f8f5]">
+
       {/* Sidebar */}
       <Sidebar />
 
       <main className="lg:ml-64">
+
         {/* Navbar */}
         <Navbar
           onAddLead={() => setShowModal(true)}
@@ -120,18 +143,24 @@ export default function CalendarPage() {
         />
 
         <section className="px-4 py-8 sm:px-8 lg:px-9">
+
           {/* Calendar heading and buttons */}
           <div className="mb-5 flex flex-col gap-5 xl:flex-row xl:items-end xl:justify-between">
+
             <div>
-              <h2 className="text-3xl font-bold text-[#202520]">{monthName}</h2>
+              <h2 className="text-3xl font-bold text-[#202520]">
+                {monthName}
+              </h2>
 
               <p className="mt-1 text-sm font-medium text-[#4c5d53]">
                 {meetings.length} scheduled lead follow-ups
               </p>
             </div>
 
+
             {/* Calendar navigation */}
             <div className="flex gap-2">
+
               <button
                 onClick={goToPreviousMonth}
                 className="rounded-lg border border-[#b8c4ba] bg-white px-4 py-3 text-sm font-semibold text-[#17231c] shadow-sm transition hover:bg-[#eef2ed]"
@@ -152,8 +181,10 @@ export default function CalendarPage() {
               >
                 Next
               </button>
+
             </div>
           </div>
+
 
           {/* Error message */}
           {error && (
@@ -162,14 +193,17 @@ export default function CalendarPage() {
             </p>
           )}
 
+
           {/* Calendar */}
           <CalendarGrid
             meetings={meetings}
             currentDate={currentDate}
             onMeetingClick={() => {}}
           />
+
         </section>
       </main>
+
 
       {/* Add Activity Modal */}
       {showModal && (
@@ -180,6 +214,7 @@ export default function CalendarPage() {
           onSave={saveActivity}
         />
       )}
+
     </div>
   );
 }

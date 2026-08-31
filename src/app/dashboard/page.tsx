@@ -71,7 +71,7 @@ export default function Dashboard() {
       <Sidebar />
 
       {/* Main content */}
-      <div className="ml-64">
+      <div className="lg:ml-64">
         {/* Navbar */}
         <Navbar />
 

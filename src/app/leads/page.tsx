@@ -16,8 +16,7 @@ import {
   type Lead,
   type LeadPayload,
   type LeadStatus,
-} from "@/src/lib/leads-api";
-
+} from "@/src/lib/leads-store";
 export default function LeadsPage() {
   // Search and filter
   const [search, setSearch] = useState("");
