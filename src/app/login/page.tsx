@@ -30,6 +30,9 @@ export default function LoginPage() {
       });
 
       console.log("Login response:", response.data);
+      const token = response.data.data.token;
+
+      localStorage.setItem("token", token);
 
       alert("Login successful");
 
