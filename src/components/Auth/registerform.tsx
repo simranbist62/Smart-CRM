@@ -28,22 +28,15 @@ export default function RegisterForm() {
         email,
         password,
         role,
-        designation
+        designation,
       );
 
       localStorage.setItem("token", result.data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify(result.data.user)
-      );
+      localStorage.setItem("user", JSON.stringify(result.data.user));
 
-      router.push("/dashboard");
+      router.push("/login");
     } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Registration failed"
-      );
+      setError(error instanceof Error ? error.message : "Registration failed");
     } finally {
       setLoading(false);
     }
@@ -51,7 +44,7 @@ export default function RegisterForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      
+      {/* Full Name */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Full Name
@@ -63,10 +56,11 @@ export default function RegisterForm() {
           onChange={(event) => setName(event.target.value)}
           placeholder="Enter your full name"
           required
-          className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c] focus:ring-2 focus:ring-[#23845c]/20"
+          className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c] focus:ring-2 focus:ring-[#23845c]/20 text-black"
         />
       </div>
 
+      {/* Email */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Email
@@ -78,10 +72,11 @@ export default function RegisterForm() {
           onChange={(event) => setEmail(event.target.value)}
           placeholder="Enter your email"
           required
-          className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c] focus:ring-2 focus:ring-[#23845c]/20"
+          className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c] focus:ring-2 focus:ring-[#23845c]/20 text-black"
         />
       </div>
 
+      {/* Password */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Password
@@ -93,11 +88,13 @@ export default function RegisterForm() {
           onChange={(event) => setPassword(event.target.value)}
           placeholder="Create a password"
           required
-          className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c] focus:ring-2 focus:ring-[#23845c]/20"
+          className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c] focus:ring-2 focus:ring-[#23845c]/20 text-black"
         />
       </div>
 
+      {/* Role + Designation */}
       <div className="grid grid-cols-2 gap-4">
+        {/* Role */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Role
@@ -106,37 +103,43 @@ export default function RegisterForm() {
           <select
             value={role}
             onChange={(event) => setRole(event.target.value)}
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c]"
+            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c] text-black"
           >
             <option value="SALES">Sales</option>
             <option value="MANAGER">Manager</option>
+            <option value="ADMIN">Admin</option>
           </select>
         </div>
 
+        {/* Designation */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Designation
           </label>
 
-          <input
-            type="text"
+          <select
             value={designation}
-            onChange={(event) =>
-              setDesignation(event.target.value)
-            }
-            placeholder="Sales Executive"
+            onChange={(event) => setDesignation(event.target.value)}
+            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c] text-black"
             required
-            className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c] focus:ring-2 focus:ring-[#23845c]/20"
-          />
+          >
+            <option value="">Select Designation</option>
+            <option value="Sales Executive">Sales Executive</option>
+            <option value="Sales Manager">Sales Manager</option>
+            <option value="Sales Representative">Sales Representative</option>
+            <option value="CRM Administrator">CRM Administrator</option>
+          </select>
         </div>
       </div>
 
+      {/* Error */}
       {error && (
         <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
           {error}
         </div>
       )}
 
+      {/* Submit */}
       <button
         type="submit"
         disabled={loading}
