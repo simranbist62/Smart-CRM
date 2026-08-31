@@ -19,7 +19,7 @@ export default function Dashboard() {
       <Sidebar />
 
       <div className="lg:ml-64">
-        <Navbar onAddLead={handleAddLead} />
+        <Navbar />
 
         <main className="p-6">
           <div className="flex flex-wrap gap-8">

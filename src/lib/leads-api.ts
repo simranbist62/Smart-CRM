@@ -1,176 +1,33 @@
-// API URL
-// The browser talks to our own Next.js routes. Those routes securely forward
-// requests to the Render backend, avoiding browser CORS errors.
-const API_URL = "/api";
+import type { LeadPayload } from "@/src/lib/leads-store";
 
-// Lead status options
-export type LeadStatus =
-  | "NEW_LEAD"
-  | "IN_PROGRESS"
-  | "LIKELY_WARM"
-  | "CONVERTED"
-  | "NOT_INTERESTED"
-  | "ON_HOLD";
+const API_URL = "https://crm-backend-eh94.onrender.com";
 
-// Reuse this list in dropdowns so every screen sends valid backend values.
-export const leadStatuses: LeadStatus[] = [
-  "NEW_LEAD",
-  "IN_PROGRESS",
-  "LIKELY_WARM",
-  "CONVERTED",
-  "NOT_INTERESTED",
-  "ON_HOLD",
-];
+export async function createLead(data: LeadPayload) {
+  const token = localStorage.getItem("token");
 
-// Activity
-export type Activity = {
-  id?: number;
-  type: "CALL" | "MEETING" | "EMAIL" | "FOLLOW_UP";
-  remarks: string;
-  occurredAt: string;
-  nextActionDate?: string;
-};
-
-// Lead
-export type Lead = {
-  id: number;
-  organizationName: string;
-  contactName: string;
-  designation?: string;
-  phone: string;
-  email?: string;
-  province?: string;
-  district?: string;
-  source?: string;
-  leadType?: string;
-  priority?: "LOW" | "MEDIUM" | "HIGH";
-  status: LeadStatus;
-  nextActionDate?: string;
-  notes?: string;
-  assignedToId?: number;
-  assignedToName?: string;
-  activities?: Activity[];
-};
-
-// Data needed when creating or updating a lead
-export type LeadData = Omit<Lead, "id" | "activities" | "assignedToName">;
-
-// LeadPayload is the name used by the form components.
-export type LeadPayload = LeadData;
-
-
-// ========================================
-// GET ALL LEADS
-// ========================================
-
-export async function getLeads(
-  options: {
-    q?: string;
-    status?: LeadStatus;
-    page?: number;
-    size?: number;
-  } = {}
-) {
-  const { q = "", status, page = 0, size = 25 } = options;
-  let url = `${API_URL}/leads?q=${encodeURIComponent(q)}&page=${page}&size=${size}`;
-
-  if (status) {
-    url += `&status=${status}`;
-  }
-
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(await getErrorMessage(response, "Failed to get leads"));
-  }
-
-  return response.json();
-}
-
-
-// ========================================
-// GET ONE LEAD
-// ========================================
-
-export async function getLead(id: number) {
-  const response = await fetch(`${API_URL}/leads/${id}`);
-
-  if (!response.ok) {
-    throw new Error(await getErrorMessage(response, "Failed to get lead"));
-  }
-
-  return response.json();
-}
-
-
-// ========================================
-// CREATE LEAD
-// ========================================
-
-export async function createLead(data: LeadData) {
-  const response = await fetch(`${API_URL}/leads`, {
+  const response = await fetch(`${API_URL}/api/leads`, {
     method: "POST",
+
     headers: {
       "Content-Type": "application/json",
+
+      ...(token
+        ? {
+            Authorization: `Bearer ${token}`,
+          }
+        : {}),
     },
+
     body: JSON.stringify(data),
   });
 
-  if (!response.ok) {
-    throw new Error(await getErrorMessage(response, "Failed to create lead"));
-  }
-
-  return response.json();
-}
-
-
-// ========================================
-// UPDATE LEAD
-// ========================================
-
-export async function updateLead(id: number, data: LeadData) {
-  const response = await fetch(`${API_URL}/leads/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  const result = await response.json();
 
   if (!response.ok) {
-    throw new Error(await getErrorMessage(response, "Failed to update lead"));
+    throw new Error(
+      result.message || "Could not create the lead."
+    );
   }
 
-  return response.json();
-}
-
-
-// ========================================
-// ADD ACTIVITY
-// ========================================
-
-export async function addActivity(id: number, data: Activity) {
-  const response = await fetch(`${API_URL}/leads/${id}/activities`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    throw new Error(await getErrorMessage(response, "Failed to add activity"));
-  }
-
-  return response.json();
-}
-
-async function getErrorMessage(response: Response, fallback: string) {
-  const body = await response.text();
-  try {
-    const data = JSON.parse(body) as { message?: string; error?: string };
-    return data.message || data.error || fallback;
-  } catch {
-    return body || fallback;
-  }
+  return result;
 }

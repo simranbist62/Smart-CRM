@@ -162,7 +162,7 @@ export default function LeadsPage() {
       <div className="lg:ml-64">
         
         {/* NAVBAR - the top bar with the "Add Lead" button */}
-        <Navbar onAddLead={openAddModal} />
+        <Navbar />
 
         {/* FILTERS - search box and status dropdown */}
         <LeadFilters
