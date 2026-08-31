@@ -23,18 +23,11 @@ export default function LoginForm() {
       const result = await loginUser(email, password);
 
       localStorage.setItem("token", result.data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify(result.data.user)
-      );
+      localStorage.setItem("user", JSON.stringify(result.data.user));
 
       router.push("/dashboard");
     } catch (error) {
-      setError(
-        error instanceof Error
-          ? error.message
-          : "Something went wrong"
-      );
+      setError(error instanceof Error ? error.message : "Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -42,7 +35,6 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Email
