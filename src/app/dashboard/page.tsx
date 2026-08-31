@@ -34,36 +34,25 @@ type DashboardData = {
 
 export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   const fetchDashboard = async () => {
     try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        console.log("No authentication token found");
-        return;
-      }
-      const response = await api.get("/dashboard", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await api.get("/dashboard");
 
       console.log("Dashboard response:", response.data);
 
       setData(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     fetchDashboard();
   }, []);
-
-  if (loading) {
-    return <p>Loading...</p>;
-  }
 
   return (
     <div className="min-h-screen bg-[#f5f6f3]">

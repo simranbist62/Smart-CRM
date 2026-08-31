@@ -1,9 +1,7 @@
 const API_URL = "https://crm-backend-eh94.onrender.com/api";
 
-export async function loginUser(
-  email: string,
-  password: string
-) {
+// Login
+export async function loginUser(email: string, password: string) {
   const response = await fetch(`${API_URL}/auth/login`, {
     method: "POST",
     headers: {
@@ -24,12 +22,13 @@ export async function loginUser(
   return data;
 }
 
+// Register
 export async function registerUser(
   name: string,
   email: string,
   password: string,
   role: string,
-  designation: string
+  designation: string,
 ) {
   const response = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
@@ -52,4 +51,53 @@ export async function registerUser(
   }
 
   return data;
+}
+
+// Get currently authenticated user
+export async function getCurrentUser() {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("No authentication token found");
+  }
+
+  const response = await fetch(`${API_URL}/auth/me`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to get current user");
+  }
+
+  return data;
+}
+
+// Logout
+export async function logoutUser() {
+  const token = localStorage.getItem("token");
+
+  try {
+    const response = await fetch(`${API_URL}/auth/logout`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Logout failed");
+    }
+
+    return data;
+  } finally {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  }
 }
