@@ -1,7 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import type { Lead } from "@/src/lib/leads-api";
+
+
+import type { Lead } from "@/src/lib/leads-store";
 
 // These are the different types of activities we can add
 // We have 4 options: CALL, MEETING, EMAIL, and FOLLOW_UP
