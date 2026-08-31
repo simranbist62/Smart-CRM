@@ -22,9 +22,11 @@ export default function LoginForm() {
     try {
       const result = await loginUser(email, password);
 
+      // Save authentication data
       localStorage.setItem("token", result.data.token);
       localStorage.setItem("user", JSON.stringify(result.data.user));
 
+      // Go to dashboard
       router.push("/dashboard");
     } catch (error) {
       setError(error instanceof Error ? error.message : "Something went wrong");
@@ -35,6 +37,7 @@ export default function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
+      {/* Email */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Email
@@ -46,10 +49,11 @@ export default function LoginForm() {
           onChange={(event) => setEmail(event.target.value)}
           placeholder="Enter your email"
           required
-          className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c] focus:ring-2 focus:ring-[#23845c]/20"
+          className="w-full rounded-xl border border-gray-200 px-4 py-3 text-black outline-none focus:border-[#23845c] focus:ring-2 focus:ring-[#23845c]/20"
         />
       </div>
 
+      {/* Password */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">
           Password
@@ -61,20 +65,22 @@ export default function LoginForm() {
           onChange={(event) => setPassword(event.target.value)}
           placeholder="Enter your password"
           required
-          className="w-full rounded-xl border border-gray-200 px-4 py-3 outline-none focus:border-[#23845c] focus:ring-2 focus:ring-[#23845c]/20"
+          className="w-full rounded-xl border border-gray-200 px-4 py-3 text-black outline-none focus:border-[#23845c] focus:ring-2 focus:ring-[#23845c]/20"
         />
       </div>
 
+      {/* Error */}
       {error && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
+        <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
           {error}
         </div>
       )}
 
+      {/* Submit */}
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-xl bg-[#23845c] py-3.5 font-semibold text-white transition hover:bg-[#176b48] disabled:opacity-60"
+        className="w-full rounded-xl bg-[#23845c] py-3.5 font-semibold text-white transition hover:bg-[#176b48] disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? "Signing in..." : "Sign In"}
       </button>
