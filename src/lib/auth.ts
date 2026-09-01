@@ -29,7 +29,6 @@ export async function registerUser(
   password: string,
   role: string,
   designation: string,
-  designation: string,
 ) {
   const response = await fetch(`${API_URL}/auth/register`, {
     method: "POST",
