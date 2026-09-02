@@ -1,4 +1,5 @@
-// Displays the current workload assigned to each team member
+import { Role } from "@/src/context/RoleContext";
+
 type teamWorkLoad = {
   label: string;
   value: number;
@@ -7,13 +8,12 @@ type teamWorkLoad = {
 type teamProps = {
   data?: teamWorkLoad[];
 };
+
 export default function TeamWorkload({ data = [] }: teamProps) {
   return (
     <div className="mt-6 w-full max-w-xl rounded-lg bg-white p-6 shadow-md">
-      {/* Section title */}
       <h2 className="text-xl font-bold text-black">Team Workload</h2>
 
-      {/* Short description */}
       <p className="mb-6 text-gray-500">Active lead ownership</p>
 
       {data.map((item) => (
@@ -23,12 +23,11 @@ export default function TeamWorkload({ data = [] }: teamProps) {
             <span>{item.value}</span>
           </div>
 
-          {/* Workload progress bar */}
           <div className="h-2 w-full rounded-full bg-gray-200">
             <div
               className="h-2 rounded-full bg-[#5633a1]"
               style={{ width: `${item.value}%` }}
-            ></div>
+            />
           </div>
         </div>
       ))}
