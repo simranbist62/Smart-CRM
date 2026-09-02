@@ -101,3 +101,34 @@ export async function logoutUser() {
     localStorage.removeItem("user");
   }
 }
+
+//Change password
+export async function changePassword(
+  currentPassword: string,
+  newPassword: string,
+) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    throw new Error("No authentication token found");
+  }
+
+  const response = await fetch(`${API_URL}/auth/change-password`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      currentPassword,
+      newPassword,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    throw new Error(data.message || "Failed to change password");
+  }
+  return data;
+}
