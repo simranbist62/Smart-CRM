@@ -1,12 +1,42 @@
-const stats = [
-  { title: "Assigned leads", value: "0" },
-  { title: "Follow-ups", value: "0" },
-  { title: "Meetings", value: "0" },
-  { title: "Converted", value: "0", type: "green" },
-  { title: "Overdue", value: "0", type: "red" },
-];
+type CardProps = {
+  performance: {
+    assigned: number;
+    followUps: number;
+    meetings: number;
+    converted: number;
+    overdue: number;
+  };
+};
 
-export default function StatCards() {
+export default function StatCards({ performance }: CardProps) {
+  const stats = [
+    {
+      title: "Assigned leads",
+      value: performance.assigned,
+      type: "default",
+    },
+    {
+      title: "Follow-ups",
+      value: performance.followUps,
+      type: "default",
+    },
+    {
+      title: "Meetings",
+      value: performance.meetings,
+      type: "default",
+    },
+    {
+      title: "Converted",
+      value: performance.converted,
+      type: "green",
+    },
+    {
+      title: "Overdue",
+      value: performance.overdue,
+      type: "red",
+    },
+  ];
+
   return (
     <div className="grid grid-cols-5 gap-3">
       {stats.map((stat) => (
