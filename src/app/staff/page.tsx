@@ -1,13 +1,38 @@
 "use client";
+
 import Navbar from "@/src/components/layout/Navbar";
 import Sidebar from "@/src/components/layout/Sidebar";
 import Stats from "@/src/components/staff/Stats";
-import api from "@/src/api/api";
-import { useState } from "react";
 import StaffCard from "@/src/components/staff/StaffCard";
+import api from "@/src/api/api";
+import { useEffect, useState } from "react";
+
+type Staff = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  active: boolean;
+  designation: string;
+};
+
+type TeamPerformance = {
+  assigned: number;
+  converted: number;
+  overdue: number;
+};
 
 export default function Staff() {
+  const [staff, setStaff] = useState<Staff[]>([]);
+
+  const [performance, setPerformance] = useState<TeamPerformance>({
+    assigned: 0,
+    converted: 0,
+    overdue: 0,
+  });
+
   const [showForm, setShowForm] = useState(false);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -18,6 +43,53 @@ export default function Staff() {
     province: "",
     district: "",
   });
+
+  // Fetch staff and team performance
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [staffResponse, leaderboardResponse] = await Promise.all([
+          api.get("/users"),
+          api.get("/staff/leaderboard"),
+        ]);
+
+        console.log("Staff response:", staffResponse.data);
+        console.log("Leaderboard response:", leaderboardResponse.data);
+
+        const staffData = staffResponse.data.content || staffResponse.data;
+
+        const leaderboardData =
+          leaderboardResponse.data.content || leaderboardResponse.data;
+
+        setStaff(staffData);
+
+        // Calculate team totals
+        setPerformance({
+          assigned: leaderboardData.reduce(
+            (total: number, member: any) => total + (member.assigned || 0),
+            0,
+          ),
+
+          converted: leaderboardData.reduce(
+            (total: number, member: any) => total + (member.converted || 0),
+            0,
+          ),
+
+          overdue: leaderboardData.reduce(
+            (total: number, member: any) => total + (member.overdue || 0),
+            0,
+          ),
+        });
+      } catch (error) {
+        console.error("Failed to fetch staff data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Calculate active staff
+  const activeTeam = staff.filter((member) => member.active).length;
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -33,7 +105,9 @@ export default function Staff() {
 
     try {
       const response = await api.post("/users", form);
+
       console.log("Staff created:", response.data);
+
       setShowForm(false);
 
       setForm({
@@ -46,6 +120,11 @@ export default function Staff() {
         province: "",
         district: "",
       });
+
+      // Refresh staff list
+      const staffResponse = await api.get("/users");
+
+      setStaff(staffResponse.data.content || staffResponse.data);
     } catch (error) {
       console.error("Failed to create staff:", error);
     }
@@ -59,6 +138,7 @@ export default function Staff() {
         <Navbar />
 
         <main className="p-6">
+          {/* Add Staff Button */}
           <div className="mb-4 flex justify-end">
             <button
               type="button"
@@ -69,11 +149,15 @@ export default function Staff() {
             </button>
           </div>
 
-          <div className="flex gap-4">
-            <Stats heading="Active team" number={6} />
-            <Stats heading="Assigned leads" number={155} />
-            <Stats heading="Team conversions" number={21} />
-            <Stats heading="Overdue follow-ups" number={1} />
+          {/* Stats */}
+          <div className="grid grid-cols-4 gap-4">
+            <Stats heading="Active team" number={activeTeam} />
+
+            <Stats heading="Assigned leads" number={performance.assigned} />
+
+            <Stats heading="Team conversions" number={performance.converted} />
+
+            <Stats heading="Overdue follow-ups" number={performance.overdue} />
           </div>
 
           {/* Staff List */}
@@ -84,13 +168,12 @@ export default function Staff() {
       </div>
 
       {/* Add Staff Modal */}
-      {showForm ? (
+      {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <form
             onSubmit={handleSubmit}
             className="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-xl"
           >
-            {/* Header */}
             <p className="text-sm font-semibold text-[#247d68]">
               NEW TEAM MEMBER
             </p>
@@ -149,8 +232,11 @@ export default function Staff() {
                   className="w-full rounded-xl border border-gray-200 px-4 py-3 text-black outline-none focus:border-[#23845c]"
                 >
                   <option value="">Select designation</option>
+
                   <option value="Sales Executive">Sales Executive</option>
+
                   <option value="Sales Manager">Sales Manager</option>
+
                   <option value="Sales Representative">
                     Sales Representative
                   </option>
@@ -188,6 +274,7 @@ export default function Staff() {
                   className="w-full rounded-xl border border-gray-200 px-4 py-3 text-black outline-none focus:border-[#23845c]"
                 >
                   <option value="SALES">Sales</option>
+
                   <option value="MANAGER">Manager</option>
                 </select>
               </div>
@@ -263,7 +350,7 @@ export default function Staff() {
             </div>
           </form>
         </div>
-      ) : null}
+      )}
     </div>
   );
 }
