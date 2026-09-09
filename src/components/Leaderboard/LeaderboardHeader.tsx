@@ -28,12 +28,8 @@ export default function LeadHeader({ onAddLead }: LeadHeaderProps) {
           🔔
         </button>
 
-        <button
-          onClick={onAddLead}
-          className="rounded-lg bg-green-700 px-5 py-3 font-semibold text-white hover:bg-green-800"
-        >
-          + Add lead
-                  </button>
+     
+        
 
       </div>
     </div>
