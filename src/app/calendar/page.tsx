@@ -9,11 +9,7 @@ import CalendarGrid, {
   type Meeting,
 } from "../../components/Calendar/CalendarGrid";
 
-import {
-  addActivity,
-  getLeads,
-  type Lead,
-} from "@/src/lib/leads-store";
+import { addActivity, getLeads, Lead } from "@/src/lib/leads-store";
 
 
 export default function CalendarPage() {

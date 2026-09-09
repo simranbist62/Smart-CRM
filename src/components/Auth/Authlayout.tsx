@@ -19,22 +19,18 @@ export default function AuthLayout({
   return (
     <main className="min-h-screen bg-[#f4faf7] flex items-center justify-center p-6">
       <div className="w-full max-w-5xl min-h-[600px] bg-white rounded-3xl shadow-xl overflow-hidden flex">
-        
         {/* Left Side */}
         <div className="hidden md:flex md:w-1/2 bg-[#123c2d] relative overflow-hidden items-center justify-center p-10">
-          
           <div className="absolute w-72 h-72 rounded-full bg-[#2f8f68] opacity-30 -top-20 -left-20" />
           <div className="absolute w-80 h-80 rounded-full bg-[#65b891] opacity-20 -bottom-24 -right-24" />
 
           <div className="relative z-10 text-white">
             <div className="mb-10">
-              <h1 className="text-4xl font-bold">
-                Smart CRM
-              </h1>
+              <h1 className="text-4xl font-bold">Smart CRM</h1>
 
               <p className="mt-3 text-green-100">
-                Manage your customers, leads and business
-                relationships in one place.
+                Manage your customers, leads and business relationships in one
+                place.
               </p>
             </div>
 
@@ -66,15 +62,10 @@ export default function AuthLayout({
         {/* Right Side */}
         <div className="w-full md:w-1/2 flex items-center justify-center p-8 md:p-12">
           <div className="w-full max-w-md">
-            
             <div className="mb-8">
-              <h2 className="text-3xl font-bold text-gray-900">
-                {title}
-              </h2>
+              <h2 className="text-3xl font-bold text-gray-900">{title}</h2>
 
-              <p className="text-gray-500 mt-2">
-                {description}
-              </p>
+              <p className="text-gray-500 mt-2">{description}</p>
             </div>
 
             {children}
