@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRole } from "@/src/context/RoleContext";
 
 import FollowsUp from "@/src/components/dashboard/FollowsUp";
 import LeadSources from "@/src/components/dashboard/LeadSources";
@@ -35,8 +34,6 @@ type DashboardData = {
 };
 
 export default function Dashboard() {
-  const { viewingAs } = useRole();
-
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -75,20 +72,11 @@ export default function Dashboard() {
         <main className="p-6">
           {/* Statistics */}
           <div className="flex gap-6">
-            <StatCard
-              heading={viewingAs === "SALES" ? "My Leads" : "Total Leads"}
-              number={data?.total ?? 0}
-            />
+            <StatCard heading="Total Leads" number={data?.total ?? 0} />
 
-            <StatCard
-              heading={viewingAs === "SALES" ? "My Converted" : "Converted"}
-              number={data?.converted ?? 0}
-            />
+            <StatCard heading="Converted" number={data?.converted ?? 0} />
 
-            <StatCard
-              heading={viewingAs === "SALES" ? "My Warm Leads" : "Likely/Warm"}
-              number={data?.warm ?? 0}
-            />
+            <StatCard heading="Likely/Warm" number={data?.warm ?? 0} />
 
             <StatCard heading="Overdue" number={data?.overdue ?? 0} />
 
@@ -104,7 +92,7 @@ export default function Dashboard() {
           <div className="flex flex-col gap-4 lg:flex-row">
             <Pipeline data={data?.byStatus} />
 
-            {viewingAs !== "SALES" && <TeamWorkload data={data?.byOwner} />}
+            <TeamWorkload data={data?.byOwner} />
           </div>
 
           {/* Follow-ups + Lead Sources */}
