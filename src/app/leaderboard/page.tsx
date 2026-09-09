@@ -1,8 +1,9 @@
 "use client";
 
 import LeaderboardTable from "@/src/components/Leaderboard/LeaderboardTable";
+import LeaderboardHeader from "@/src/components/Leaderboard/LeaderboardHeader";
 
-import Navbar from "@/src/components/layout/Navbar";
+
 import Sidebar from "@/src/components/layout/Sidebar";
 
 export default function Leaderboard() {
@@ -16,11 +17,13 @@ export default function Leaderboard() {
         {/* Use the same top navbar as the rest of the app, so the
             title, DEMO MODE badge, and Add Lead button all work
             the same way here as everywhere else. */}
-        <Navbar />
+        
 
         <main>
           <div className="p-6">
+            <LeaderboardHeader onAddLead={() => {}} />
             <LeaderboardTable />
+            
           </div>
         </main>
 

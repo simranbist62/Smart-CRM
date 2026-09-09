@@ -42,9 +42,7 @@ export default function Navbar({
     pageName = "Calendar";
   }
 
-  if (pathname === "/leaderboard") {
-    pageName = "Team leaderboard";
-  }
+  
 
   // Saves the new lead when the Add Lead modal is submitted.
   // If the page gave us its own save function (onSaveLead), use that
