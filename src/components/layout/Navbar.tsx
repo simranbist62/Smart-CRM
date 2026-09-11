@@ -30,15 +30,8 @@ export default function Navbar({ onSaveLead, onAddLead, actionLabel = "Add lead"
   }
   if (pathname === "/calendar") {
     pageName = "Calendar";
-  } else if (pathname === "/my-work") {
-    pageName = "My Work";
-  } else if (pathname === "/staff") {
-    pageName = "Staff";
-  } else if (pathname === "/leaderboard") {
-    pageName = "Team leaderboard";
-  } else if (pathname === "/democontrols") {
-    pageName = "Demo Controls";
   }
+
 
   async function handleSaveLead(data: LeadPayload) {
     if (onSaveLead) {
