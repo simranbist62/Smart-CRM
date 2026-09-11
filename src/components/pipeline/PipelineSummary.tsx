@@ -16,8 +16,9 @@ export default function PipelineSummary({ heading, number }: Stats) {
             Move opportunities through the funnel
           </h1>
 
-          <p className="mt-1 text-gray-500">
-            Track and manage your assigned opportunities.
+          <p className="mt-1 text-sm text-gray-500">
+            Change a stage from each card. In the POC, updates persists in the
+            browser.
           </p>
         </div>
 
