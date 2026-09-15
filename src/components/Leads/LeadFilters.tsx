@@ -1,6 +1,6 @@
 "use client";
 
-import type { LeadStatus } from "@/src/lib/leads-api";
+import type { LeadStatus } from "@/src/lib/leads-store";
 
 const leadStatuses: LeadStatus[] = [
   "NEW_LEAD",
